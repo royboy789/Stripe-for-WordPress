@@ -1,0 +1,23 @@
+<h2>CUSTOMERS</h2>
+
+<article class="row" ng-repeat="customer in customers">
+    <div class="col-sm-4">
+        <h4>Customer:</h4>
+        <strong>Email:</strong> {{customer.email}}
+    </div>
+    <div class="col-sm-3">
+        <h4>Subscriptions:</h4>
+        <span ng-if="!customer.subscriptions.data.length">
+            <strong>Not Currently Subscribed</strong>
+        </span>
+        <ul>
+            <li ng-if="customer.subscriptions.data" ng-repeat="sub in customer.subscriptions.data">
+                {{sub.plan.name}} - ${{sub.plan.amount / 100}} / {{sub.plan.interval}}
+            </li>
+        </ul>
+    </div>
+    <div class="col-sm-5">
+        <h4>Account Balance</h4>
+        $<span>{{customer.account_balance}}
+    </div>
+</article>

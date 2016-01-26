@@ -1,0 +1,39 @@
+{
+  "name": "stripe-for-wp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "angular": "^1.4.9",
+    "bootstrap-sass": "^3.3.6",
+    "angular-ui-router": "^0.2.16",
+    "gulp-sass": "^2.1.1",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp": "^3.9.0",
+    "gulp-watch": "^4.3.5"
+  },
+  "devDependencies": {
+    "angular": "^1.4.8",
+    "angular-resource": "^1.4.8",
+    "angular-ui-router": "^0.2.15",
+    "bootstrap-sass": "^3.3.6",
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-sass": "^2.1.1",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-watch": "^4.3.5"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/royboy789/Stripe-for-WordPress.git"
+  },
+  "author": "royboy789",
+  "license": "GPLv3",
+  "bugs": {
+    "url": "https://github.com/royboy789/Stripe-for-WordPress/issues"
+  },
+  "homepage": "https://github.com/royboy789/Stripe-for-WordPress#readme"
+}

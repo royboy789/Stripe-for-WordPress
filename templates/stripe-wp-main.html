@@ -1,0 +1,36 @@
+<h2>Settings</h2>
+<p>
+    Change the settings below for your build
+</p>
+
+<form class="row" ng-submit="updateKeys()">
+    <div class="col-sm-12">
+        <h3>Stripe Mode</h3>
+        <p>
+            You can use test mode while working on your site, it will use the test API key
+        </p>
+        <div class="form-group">
+            <label for="stripe-mode">Stripe Mode</label>
+            <select id="stripe-mode" class="form-control" ng-model="settings.mode">
+                <option value="">Choose Stripe Mode</option>
+                <option value="test">Test</option>
+                <option value="prod">Production</option>
+            </select>
+        </div>
+        <hr />
+        <h3>Stripe API Secret</h3>
+        <p>
+            You can find your API keys in the <a href="https://dashboard.stripe.com/account" target="_blank">Stripe Dashboard</a>
+        </p>
+        <div class="form-group">
+            <label for="test-api">Test Secret Key</label>
+            <input id="test-api" ng-model="settings.keys.test" placeholder="Stripe Testing API Key" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="prod-api">Live Secret Key</label>
+            <input id="prod-api" ng-model="settings.keys.prod" placeholder="Stripe Production API Key" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Update Settings</button>
+    </div>
+</form>
+<hr />
