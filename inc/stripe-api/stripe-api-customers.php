@@ -14,16 +14,23 @@ class wp_stripe_customers {
 		}
 
 		if( $settings['mode'] && $settings['mode'] == 'prod' && $settings['keys']['prod'] ) {
-			\Stripe\Stripe::setApiKey( $settings['keys']['test'] );
+			\Stripe\Stripe::setApiKey( $settings['keys']['prod'] );
 		}
 
 	}
 
-	function get_customers() {
+	function get_customers( WP_REST_Request $data ) {
 		$this->set_api_key();
 
+		$data = $data->get_params();
+
+
 		try {
-			$customers = \Stripe\Customer::all(array("limit" => 100));
+			$args = array( 'limit' => 10 );
+			if( isset( $data['id'] ) ) {
+				$args['starting_after'] = $data['id'];
+			}
+			$customers = \Stripe\Customer::all($args);
 			return new WP_REST_Response( $customers, 200 );
 
 		} catch( Stripe_AuthenticationError $e ) {

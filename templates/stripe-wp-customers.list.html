@@ -1,6 +1,6 @@
 <h2>CUSTOMERS</h2>
 
-<article class="row" ng-repeat="customer in customers">
+<article class="row" ng-repeat="customer in customers track by $index">
     <div class="col-sm-4">
         <h4>Customer:</h4>
         <strong>Email:</strong> {{customer.email}}
@@ -21,3 +21,7 @@
         $<span>{{customer.account_balance}}
     </div>
 </article>
+
+<div ng-if="more">
+    <span class="btn btn-warning" ng-click="loadMore()">Load More</span>
+</div>

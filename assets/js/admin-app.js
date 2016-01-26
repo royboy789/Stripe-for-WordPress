@@ -62,8 +62,12 @@ wp_stripe.app.factory( 'Stripe', function( $resource, $q, $http ){
             return response.promise;
         },
         get_customers: function( data ){
+            var url = stripe_wp_local.api_url + 'stripe-wp/customers';
+            if( data && data.id ){
+                url = url + '?id=' + data.id;
+            }
             var response = $q.defer();
-            $http.get(stripe_wp_local.api_url + 'stripe-wp/customers').then(function(res) {
+            $http.get(url).then(function(res) {
                 response.resolve( res );
             });
             return response.promise;
@@ -74,11 +78,10 @@ wp_stripe.app.factory( 'Stripe', function( $resource, $q, $http ){
 /*
  * Settings Controller
  */
-wp_stripe.app.controller( 'Settings', ['$scope', '$rootScope', 'Stripe', function( $scope, $rootScope, Stripe ) {
+wp_stripe.app.controller( 'Settings', ['$scope', '$rootScope', '$timeout', 'Stripe', function( $scope, $rootScope, $timeout, Stripe ) {
     console.log('loading Settings page..');
 
     Stripe.get_settings().then(function(res){
-        console.log( res );
         $scope.settings = {
             keys: {},
             mode: ''
@@ -103,7 +106,10 @@ wp_stripe.app.controller( 'Settings', ['$scope', '$rootScope', 'Stripe', functio
 
     $scope.updateKeys = function(){
         Stripe.save_settings($scope.settings).then(function(res){
-            console.log(res);
+            $scope.updated = true;
+            $timeout(function(){
+                $scope.updated = false;
+            }, 1500)
         })
     }
 
@@ -117,4 +123,18 @@ wp_stripe.app.controller( 'CustomerList', ['$scope', '$rootScope', 'Stripe', fun
         $scope.more = res.data.has_more;
         $scope.customers = res.data.data;
     });
+
+    $scope.loadMore = function(){
+        if( !$scope.more ) {
+            return false;
+        }
+        var data = {
+            id: $scope.customers[ $scope.customers.length - 1].id
+        }
+        Stripe.get_customers(data).then(function(res){
+            $scope.more = res.data.has_more;
+            $scope.customers.push.apply($scope.customers, res.data.data);
+        });
+
+    }
 }])

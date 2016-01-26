@@ -30,7 +30,10 @@
             <label for="prod-api">Live Secret Key</label>
             <input id="prod-api" ng-model="settings.keys.prod" placeholder="Stripe Production API Key" class="form-control" />
         </div>
-        <button type="submit" class="btn btn-primary">Update Settings</button>
+        <div class="text-center">
+            <button id="update-settings" type="submit" class="btn btn-primary">Update Settings</button>
+            <p ng-show="updated" id="updated">Updated!</p>
+        </div>
     </div>
 </form>
 <hr />
