@@ -7,7 +7,7 @@ This plugin utilizes both the __WordPress REST API__ and __Stripe PHP Lib API__ 
 ##Angular
 Plugin is built in AngularJS, it is a single page client side application that runs in the WordPress admin dashboard.
 
- #To Install
+#To Install
  + Clone Repo
  + Run `npm install`
  + Run `gulp`
