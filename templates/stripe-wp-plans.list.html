@@ -1,0 +1,14 @@
+<h3>Your Plans</h3>
+
+<article class="row customer-list" ng-repeat="plan in plans track by $index">
+    <div class="col-sm-6">
+        <strong>Plan:</strong> {{plan.name}}
+    </div>
+    <div class="col-sm-4">
+        <strong>Amount:</strong> {{plan.amount / 100}} / {{plan.interval}}
+    </div>
+    <div class="col-sm-2">
+        <a ui-sref="planEdit({id:plan.id})" class="btn btn-block btn-warning">Edit</a>
+        <a ui-sref="planDetail({id:plan.id})" class="btn btn-block btn-primary">View</a>
+    </div>
+</article>

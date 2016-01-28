@@ -1,0 +1,33 @@
+<h3>Plan: {{plan.name}}</h3>
+
+<article class="row">
+    <div class="col-sm-8">
+        <dl>
+            <dt>Plan ID:</dt>
+            <dd>{{plan.id}}</dd>
+
+            <dt>Plan Amount</dt>
+            <dd>{{plan.amount / 100}} / {{plan.interval}}</dd>
+
+            <dt>Trial Period Days</dt>
+            <dd>{{plan.trial_period_days}}</dd>
+
+            <dt>Plan Mode</dt>
+            <dd>
+                <span ng-if="plan.livemode">Live</span>
+                <span ng-if="!plan.livemode">Not Live</span>
+            </dd>
+
+            <dt>Statement Description</dt>
+            <dd>
+                {{plan.statement_descriptor}}
+                <br/>
+                <em class="text-center">Shows on Customer's Credit Card Statemet</em>
+            </dd>
+
+        </dl>
+    </div>
+    <div class="col-sm-4">
+        <a ui-sref="planEdit({id:plan.id})" class="btn btn-block btn-warning">Edit Plan</a>
+    </div>
+</article>

@@ -26,6 +26,9 @@ class wp_stripe_menu {
                                     <li ng-class="isActiveNav(\'settings\');">
                                         <a ui-sref="settings">Settings</a>
                                     </li>
+                                    <li ng-class="isActiveNav(\'plans\');">
+                                        <a ui-sref="plans">Plans</a>
+                                    </li>
                                     <li ng-class="isActiveNav(\'customers\');">
                                         <a ui-sref="customers">Customers</a>
                                     </li>

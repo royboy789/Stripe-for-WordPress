@@ -2,7 +2,7 @@
 
 require 'stripe-api/stripe-api-settings.php';
 require 'stripe-api/stripe-api-customers.php';
-
+require 'stripe-api/stripe-api-plans.php';
 class wp_stripe_routes {
 
 	function register_routes() {
@@ -11,6 +11,7 @@ class wp_stripe_routes {
 		 */
 		$settings_api = new wp_stripe_settings();
 		$customers_api = new wp_stripe_customers();
+		$plans_api = new wp_stripe_plans();
 
 
 		/**
@@ -46,6 +47,28 @@ class wp_stripe_routes {
 				'callback' => array( $customers_api, 'get_customers' ),
 			)
 		));
+
+		/**
+		 * Plans
+		 */
+		register_rest_route( 'stripe-wp', '/plans', array(
+			array(
+				'methods' => 'GET',
+				'callback' => array( $plans_api, 'get_plans' ),
+			)
+		));
+
+		register_rest_route( 'stripe-wp', '/plans/(?P<id>.+)', array(
+			array(
+				'methods' => 'POST',
+				'callback' => array( $plans_api, 'save_plan' ),
+			),
+			array(
+				'methods' => 'GET',
+				'callback' => array( $plans_api, 'get_plans' ),
+			)
+		));
+
 	}
 }
 ?>

@@ -20,37 +20,7 @@ wp_stripe.app.run( function( $rootScope, $state ) {
     });
 });
 
-/*
- * UI Router States
- */
-wp_stripe.app.config(function($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise('/');
-    $stateProvider
-        .state('dashboard', {
-            url: '/',
-            templateUrl: stripe_wp_local.template_directory + '/stripe-wp-dashboard.html'
-        })
-        .state('settings', {
-            url: '/settings',
-            templateUrl: stripe_wp_local.template_directory + '/stripe-wp-settings.html',
-            controller: 'Settings',
-        })
-        .state('customers', {
-            url: '/customers',
-            templateUrl: stripe_wp_local.template_directory + '/stripe-wp-customers.list.html',
-            controller: 'CustomerList'
-        })
-        .state('customerDetail', {
-            url: '/customers/detail/:id',
-            templateUrl: stripe_wp_local.template_directory + '/stripe-wp-customers.detail.html',
-            controller: 'CustomerDetail'
-        })
-        .state('customerEdit', {
-            url: '/customers/edit/:id',
-            templateUrl: stripe_wp_local.template_directory + '/stripe-wp-customers.edit.html',
-            controller: 'CustomerEdit'
-        })
-});
+
 /*
  * Filter to trust HTML
 */
@@ -60,66 +30,6 @@ wp_stripe.app.filter( 'to_trusted', function( $sce ){
     }
 });
 
-
-/*
- * Stripe Factory
- */
-wp_stripe.app.factory( 'Stripe', function( $resource, $q, $http ){
-    return {
-        get_settings: function(){
-            var response = $q.defer();
-            $http.get(stripe_wp_local.api_url + 'stripe-wp/settings').then(function(res) {
-                response.resolve( res );
-            });
-            return response.promise;
-        },
-        save_settings: function( data ){
-            var response = $q.defer();
-            $http.post(stripe_wp_local.api_url + 'stripe-wp/settings', data).then(function(res) {
-                response.resolve( res );
-            });
-            return response.promise;
-        },
-        get_customers: function( data ){
-            var url = stripe_wp_local.api_url + 'stripe-wp/customers';
-            if( data && data.starting_after ){
-                url = url + '?starting_after=' + data.starting_after;
-            }
-            if( data && data.id ){
-                url = url + '?id=' + data.id;
-            }
-            var response = $q.defer();
-            $http.get(url).then(function(res) {
-                response.resolve( res );
-            });
-            return response.promise;
-        },
-        customer: {
-            save: function( data ){
-                var url = stripe_wp_local.api_url + 'stripe-wp/customers/';
-                if( data.id ) {
-                    url = url + data.id;
-                }
-                var response = $q.defer();
-                $http.post(url, data).then(function(res) {
-                    response.resolve( res );
-                });
-                return response.promise;
-            },
-            get: function( data ){
-                var url = stripe_wp_local.api_url + 'stripe-wp/customers/';
-                if( data.id ) {
-                    url = url + data.id;
-                }
-                var response = $q.defer();
-                $http.get(url).then(function(res) {
-                    response.resolve( res );
-                });
-                return response.promise;
-            },
-        }
-    };
-});
 
 /*
  * Settings Controller
@@ -165,7 +75,7 @@ wp_stripe.app.controller( 'Settings', ['$scope', '$rootScope', '$timeout', 'Stri
  * Customers Controller
  */
 wp_stripe.app.controller( 'CustomerList', ['$scope', '$rootScope', 'Stripe', function( $scope, $rootScope, Stripe ) {
-    Stripe.get_customers().then(function(res){
+    Stripe.customer.get_customers().then(function(res){
         $scope.more = res.data.has_more;
         $scope.customers = res.data.data;
     });
@@ -177,7 +87,7 @@ wp_stripe.app.controller( 'CustomerList', ['$scope', '$rootScope', 'Stripe', fun
         var data = {
             starting_after: $scope.customers[$scope.customers.length - 1].id
         };
-        Stripe.get_customers(data).then(function(res){
+        Stripe.customer.get_customers(data).then(function(res){
             $scope.more = res.data.has_more;
             $scope.customers.push.apply($scope.customers, res.data.data);
         });
@@ -190,7 +100,7 @@ wp_stripe.app.controller( 'CustomerList', ['$scope', '$rootScope', 'Stripe', fun
  */
 wp_stripe.app.controller( 'CustomerDetail', ['$scope', '$rootScope', '$stateParams', 'Stripe', function( $scope, $rootScope, $stateParams, Stripe ) {
     console.log('loading customer...');
-    Stripe.get_customers( $stateParams).then(function(res){
+    Stripe.customer.get_customers( $stateParams).then(function(res){
         $scope.customer = res.data;
     });
 
@@ -205,7 +115,7 @@ wp_stripe.app.controller( 'CustomerDetail', ['$scope', '$rootScope', '$statePara
  */
 wp_stripe.app.controller( 'CustomerEdit', ['$scope', '$rootScope', '$stateParams', '$timeout', 'Stripe', function( $scope, $rootScope, $stateParams, $timeout, Stripe ) {
     console.log('loading customer...');
-    Stripe.customer.get( $stateParams).then(function(res){
+    Stripe.customer.get( $stateParams ).then(function(res){
         $scope.customer = res.data;
     });
 
@@ -223,4 +133,47 @@ wp_stripe.app.controller( 'CustomerEdit', ['$scope', '$rootScope', '$stateParams
             }, 2000)
         });
     }
+}]);
+
+/*
+ * Plans List
+ */
+wp_stripe.app.controller( 'PlansList', ['$scope', '$rootScope', '$stateParams', '$timeout', 'Stripe', function( $scope, $rootScope, $stateParams, $timeout, Stripe ) {
+    console.log('loading plans...');
+    Stripe.plans.get_plan().then(function(res){
+        $scope.plans = res.data.data;
+    });
+
+}]);
+
+/*
+ * Plans Detail
+ */
+wp_stripe.app.controller( 'PlanDetail', ['$scope', '$rootScope', '$stateParams', '$timeout', 'Stripe', function( $scope, $rootScope, $stateParams, $timeout, Stripe ) {
+    console.log('loading plans...');
+    Stripe.plans.get_plan( $stateParams ).then(function(res){
+        $scope.plan = res.data;
+    });
+
+}]);
+
+/*
+ * Plans Edit
+ */
+wp_stripe.app.controller( 'PlanEdit', ['$scope', '$rootScope', '$stateParams', '$timeout', 'Stripe', function( $scope, $rootScope, $stateParams, $timeout, Stripe ) {
+    console.log('loading plans...');
+    Stripe.plans.get_plan( $stateParams ).then(function(res){
+        $scope.plan = res.data;
+    });
+
+    $scope.savePlan = function() {
+        Stripe.plans.save_plan( $scope.plan ).then(function(res){
+            $scope.plan = res.data;
+            $scope.updated = true;
+            $timeout(function(){
+                $scope.updated = false;
+            }, 2000)
+        });
+    }
+
 }]);
