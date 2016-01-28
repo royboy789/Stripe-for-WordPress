@@ -20,7 +20,4 @@ I have created a few endpoins if you want to extend. All under the `stripe-wp` n
 + Login to your dashboard and activate the `Stripe for WordPress` plugin
 
 ##TO-DO
-+ Add Customer detail view
-+ Add Customer update endpoint
-+ Add Subscriptions __GET__ and __POST__ endpoints
-+ Add Subscriptions list & detail views
+all to-do, issues, and feature requests are in [issues](https://github.com/royboy789/Stripe-for-WordPress/issues)
