@@ -1,18 +1,36 @@
 body.toplevel_page_wp-stripe-app {
-  #wpcontent {
-    background: white;
-    .app-container {
-      background: white;
-      padding-bottom: 20px;
-      padding-top: 20px;
-      .customer-list {
-        border-bottom: 1px solid rgba( 0, 0, 0, 0.25 );
-        padding-bottom: 10px;
-        padding-top: 10px;
-        &:hover {
-          background: rgba( 0, 0, 0, 0.05);
+    #wpcontent {
+        background: white;
+        .app-container {
+            background: white;
+            padding-bottom: 20px;
+            padding-top: 20px;
+            .customer-list {
+                border-bottom: 1px solid rgba( 0, 0, 0, 0.25 );
+                padding-bottom: 10px;
+                padding-top: 10px;
+                &:hover {
+                    background: rgba( 0, 0, 0, 0.05);
+                }
+                &.delinquent {
+                    border: 2px solid red;
+                    background: rgba( 255, 0, 0, 0.1 );
+                }
+            }
+            .delete {
+                cursor: pointer;
+                display: block;
+                text-align: center;
+            }
+            .red {
+                color: red;
+            }
         }
-      }
     }
-  }
+}
+.buffer {
+margin-top: 20px;
+.more {
+margin-top: 40px;
+}
 }

@@ -21,7 +21,8 @@
     "gulp-concat": "^2.6.0",
     "gulp-sass": "^2.1.1",
     "gulp-sourcemaps": "^1.6.0",
-    "gulp-watch": "^4.3.5"
+    "gulp-watch": "^4.3.5",
+    "sweetalert": "^1.1.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

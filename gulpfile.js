@@ -7,9 +7,11 @@ var jsFileList = [
     'node_modules/angular/angular.min.js',
     'node_modules/angular-ui-router/build/angular-ui-router.min.js',
     'node_modules/angular-resource/angular-resource.min.js',
+    'node_modules/sweetalert/dist/sweetalert.min.js',
     'assets/js/admin-app.js',
     'assets/js/admin-routes.js',
-    'assets/js/stripe-factory.js'
+    'assets/js/stripe-factory.js',
+    'assets/js/user-factory.js',
 ];
 
 gulp.task( 'sass', function() {

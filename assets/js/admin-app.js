@@ -62,10 +62,11 @@ wp_stripe.app.controller( 'Settings', ['$scope', '$rootScope', '$timeout', 'Stri
 
     $scope.updateKeys = function(){
         Stripe.save_settings($scope.settings).then(function(res){
-            $scope.updated = true;
-            $timeout(function(){
-                $scope.updated = false;
-            }, 1500)
+            swal({
+                title: 'Updated',
+                text: 'Settings Updated Successfully',
+                type: 'success'
+            });
         })
     }
 
@@ -93,6 +94,12 @@ wp_stripe.app.controller( 'CustomerList', ['$scope', '$rootScope', 'Stripe', fun
         });
 
     }
+
+    $scope.delCheck = function( delinquent ) {
+        if( delinquent ) {
+            return 'delinquent';
+        }
+    }
 }]);
 
 /*
@@ -113,7 +120,7 @@ wp_stripe.app.controller( 'CustomerDetail', ['$scope', '$rootScope', '$statePara
 /*
  * Customer Edit
  */
-wp_stripe.app.controller( 'CustomerEdit', ['$scope', '$rootScope', '$stateParams', '$timeout', 'Stripe', function( $scope, $rootScope, $stateParams, $timeout, Stripe ) {
+wp_stripe.app.controller( 'CustomerEdit', ['$scope', '$rootScope', '$stateParams', '$state', '$timeout', 'Stripe', 'Users', function( $scope, $rootScope, $stateParams, $state, $timeout, Stripe, Users ) {
     console.log('loading customer...');
     Stripe.customer.get( $stateParams ).then(function(res){
         $scope.customer = res.data;
@@ -127,12 +134,101 @@ wp_stripe.app.controller( 'CustomerEdit', ['$scope', '$rootScope', '$stateParams
     $scope.saveCustomer = function() {
         Stripe.customer.save( $scope.customer ).then(function(res){
             $scope.customer = res.data;
-            $scope.updated = true;
-            $timeout(function(){
-                $scope.updated = false;
-            }, 2000)
+            swal("Saved", "Customer " + $scope.customer.id + " saved", "success")
+
         });
-    }
+    };
+
+    $scope.deleteCustomer = function() {
+
+        if( $scope.customer.metadata.user_id ) {
+            $scope.wp_user = false;
+
+            Users.get({nonce: stripe_wp_local.nonce, id: $scope.customer.metadata.user_id }, function(res){
+                $scope.wp_user = true;
+            }, function(res){
+                if( res.data.code == 'rest_user_invalid_id' ) {
+                    $scope.wp_user = false;
+                }
+            });
+        }
+
+        swal({
+            title: 'Delete Confirmation',
+            text: 'Are you sure you want to delete customer: '+ $scope.customer.id + '?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Delete',
+            cancelButtonText: 'Cancel',
+            closeOnConfirm: false,
+        },
+        function( isConfirm ) {
+
+            if( isConfirm && $scope.wp_user ) {
+                swal({
+                    title: 'Delete WordPress User?',
+                    text: 'Do you also want to remove the WordPress user? Or just the Stripe User',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Both',
+                    cancelButtonText: 'Stripe Only',
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                function( isConfirm ) {
+                    if( isConfirm ) {
+
+                        // Delete WP User
+                        Users.delete({nonce: stripe_wp_local.nonce, id: $scope.customer.metadata.user_id, force: true }, function(res){
+                            console.log( res );
+                            // Delete Stripe Customer
+                            Stripe.customer.delete( $scope.customer ).then(function(res){
+                                if( res.data.deleted ){
+                                    swal({
+                                        title: 'Deleted',
+                                        text: 'Stripe Customer Deleted Successfully',
+                                        type: 'success'
+                                    });
+
+                                    $state.go('customers');
+
+                                    swal({
+                                        title: 'Deleted',
+                                        text: 'Customer & User Deleted Successfully',
+                                        type: 'success'
+                                    });
+                                }
+                            });
+                        });
+
+                    } else {
+                        Stripe.customer.delete( $scope.customer).then(function(res){
+                            if( res.data.deleted ){
+                                swal({
+                                    title: 'Deleted',
+                                    text: 'Stripe Customer Deleted Successfully',
+                                    type: 'success'
+                                });
+                                $state.go('customers');
+                            }
+                        });
+                    }
+                })
+            } else {
+                Stripe.customer.delete( $scope.customer).then(function(res){
+                    if( res.data.deleted ){
+                        swal({
+                            title: 'Deleted',
+                            text: 'Stripe Customer Deleted Successfully',
+                            type: 'success'
+                        });
+                        $state.go('customers');
+                    }
+                });
+            }
+        })
+
+    };
 }]);
 
 /*
@@ -169,10 +265,11 @@ wp_stripe.app.controller( 'PlanEdit', ['$scope', '$rootScope', '$stateParams', '
     $scope.savePlan = function() {
         Stripe.plans.save_plan( $scope.plan ).then(function(res){
             $scope.plan = res.data;
-            $scope.updated = true;
-            $timeout(function(){
-                $scope.updated = false;
-            }, 2000)
+            swal({
+                title: 'Updated',
+                text: 'Plan Updated Successfully',
+                type: 'success'
+            });
         });
     }
 

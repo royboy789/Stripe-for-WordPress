@@ -1,14 +1,25 @@
 <h3>Your Plans</h3>
 
 <article class="row customer-list" ng-repeat="plan in plans track by $index">
-    <div class="col-sm-6">
+    <div class="col-sm-3">
         <strong>Plan:</strong> {{plan.name}}
     </div>
     <div class="col-sm-4">
-        <strong>Amount:</strong> {{plan.amount / 100}} / {{plan.interval}}
+        <strong>Amount:</strong> ${{plan.amount / 100}} / {{plan.interval}}
+    </div>
+    <div class="col-sm-3">
+        <strong>Mode:</strong>
+        <span ng-if="plan.livemode">Live</span>
+        <span ng-if="!plan.livemode">Not Live</span>
     </div>
     <div class="col-sm-2">
         <a ui-sref="planEdit({id:plan.id})" class="btn btn-block btn-warning">Edit</a>
         <a ui-sref="planDetail({id:plan.id})" class="btn btn-block btn-primary">View</a>
     </div>
 </article>
+
+<div class="row" ng-if="!plans.length">
+    <div class="col-sm-12 text-center">
+        <h4>No Stripe Plans Found</h4>
+    </div>
+</div>

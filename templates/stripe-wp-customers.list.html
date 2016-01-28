@@ -1,6 +1,6 @@
 <h2>CUSTOMERS</h2>
 
-<article class="row customer-list" ng-repeat="customer in customers track by $index">
+<article class="row customer-list" ng-repeat="customer in customers track by $index" ng-class="delCheck(customer.delinquent)">
     <div class="col-sm-4">
         <h4>Customer:</h4>
         <strong>Email:</strong> {{customer.email}}
@@ -21,11 +21,17 @@
         $<span>{{customer.account_balance / 100}}
     </div>
     <div class="col-sm-2">
-        <a ui-sref="customerEdit({id:customer.id})" class="btn btn-block btn-warning">Edit</a>
         <a ui-sref="customerDetail({id:customer.id})" class="btn btn-block btn-primary">View</a>
+        <a ui-sref="customerEdit({id:customer.id})" class="btn btn-block btn-warning">Edit</a>
     </div>
 </article>
 
-<div ng-if="more">
+<div class="buffer" ng-if="more">
     <span class="btn btn-warning" ng-click="loadMore()">Load More</span>
+</div>
+
+<div class="row" ng-if="!customers.length">
+    <div class="col-sm-12 text-center">
+        <h4>No Stripe Customers Found</h4>
+    </div>
 </div>

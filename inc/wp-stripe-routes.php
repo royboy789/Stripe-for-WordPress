@@ -45,7 +45,11 @@ class wp_stripe_routes {
 			array(
 				'methods' => 'GET',
 				'callback' => array( $customers_api, 'get_customers' ),
-			)
+			),
+			array(
+				'methods' => 'DELETE',
+				'callback' => array( $customers_api, 'delete_customer' ),
+			),
 		));
 
 		/**
