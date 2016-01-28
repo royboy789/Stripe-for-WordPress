@@ -143,7 +143,6 @@ wp_stripe.app.controller( 'CustomerEdit', ['$scope', '$rootScope', '$stateParams
 
         if( $scope.customer.metadata.user_id ) {
             $scope.wp_user = false;
-
             Users.get({nonce: stripe_wp_local.nonce, id: $scope.customer.metadata.user_id }, function(res){
                 $scope.wp_user = true;
             }, function(res){
@@ -177,7 +176,6 @@ wp_stripe.app.controller( 'CustomerEdit', ['$scope', '$rootScope', '$stateParams
                 },
                 function( isConfirm ) {
                     if( isConfirm ) {
-
                         // Delete WP User
                         Users.delete({nonce: stripe_wp_local.nonce, id: $scope.customer.metadata.user_id, force: true }, function(res){
                             console.log( res );
@@ -200,7 +198,6 @@ wp_stripe.app.controller( 'CustomerEdit', ['$scope', '$rootScope', '$stateParams
                                 }
                             });
                         });
-
                     } else {
                         Stripe.customer.delete( $scope.customer).then(function(res){
                             if( res.data.deleted ){
