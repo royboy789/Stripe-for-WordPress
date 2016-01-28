@@ -92,6 +92,19 @@ wp_stripe.app.factory( 'Stripe', function( $resource, $q, $http ){
                     response.resolve( res );
                 });
                 return response.promise;
+            },
+            delete_plan: function( data ) {
+                var url = stripe_wp_local.api_url + 'stripe-wp/plans/';
+                if( data.id ) {
+                    url = url + data.id;
+                } else {
+                    return 'No ID set';
+                }
+                var response = $q.defer();
+                $http.delete(url, data).then(function(res) {
+                    response.resolve( res );
+                });
+                return response.promise;
             }
         }
     };

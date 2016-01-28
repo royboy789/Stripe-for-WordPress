@@ -2,13 +2,15 @@
 
 <article class="row customer-list" ng-repeat="plan in plans track by $index">
     <div class="col-sm-3">
-        <strong>Plan:</strong> {{plan.name}}
+        <h4>Plan</h4>
+        {{plan.name}}
     </div>
     <div class="col-sm-4">
-        <strong>Amount:</strong> ${{plan.amount / 100}} / {{plan.interval}}
+        <h4>Amount</h4>
+        ${{plan.amount / 100}} / {{plan.interval}}
     </div>
     <div class="col-sm-3">
-        <strong>Mode:</strong>
+        <h4>Mode:</h4>
         <span ng-if="plan.livemode">Live</span>
         <span ng-if="!plan.livemode">Not Live</span>
     </div>

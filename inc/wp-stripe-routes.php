@@ -70,6 +70,10 @@ class wp_stripe_routes {
 			array(
 				'methods' => 'GET',
 				'callback' => array( $plans_api, 'get_plans' ),
+			),
+			array(
+				'methods' => 'DELETE',
+				'callback' => array( $plans_api, 'delete_plan' )
 			)
 		));
 

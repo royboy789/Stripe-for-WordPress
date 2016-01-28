@@ -102,5 +102,40 @@ class wp_stripe_plans {
 
 	}
 
+	function delete_plan( WP_REST_Request $request ) {
+		$this->set_api_key();
+		$data = $request->get_params();
+
+		if( !isset( $data['id'] ) ) {
+			return new WP_Error( 'data', __( 'No Customer ID Set' ), array( 'status' => 404 ) );
+		}
+
+		try {
+
+			$plan = \Stripe\Plan::retrieve( $data['id'] );
+			$plan->delete();
+			return new WP_REST_Response( $plan, 200 );
+
+		} catch( Stripe_AuthenticationError $e ) {
+			$body = $e->getJsonBody();
+			$err = $body['error'];
+
+			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
+
+		} catch( Stripe_Error $e ) {
+			$body = $e->getJsonBody();
+			$err = $body['error'];
+
+			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
+
+		} catch ( \Stripe\Error\Base $e ) {
+			$body = $e->getJsonBody();
+			$err = $body['error'];
+
+			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
+		}
+
+	}
+
 }
 ?>

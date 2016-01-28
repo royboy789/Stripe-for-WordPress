@@ -253,7 +253,7 @@ wp_stripe.app.controller( 'PlanDetail', ['$scope', '$rootScope', '$stateParams',
 /*
  * Plans Edit
  */
-wp_stripe.app.controller( 'PlanEdit', ['$scope', '$rootScope', '$stateParams', '$timeout', 'Stripe', function( $scope, $rootScope, $stateParams, $timeout, Stripe ) {
+wp_stripe.app.controller( 'PlanEdit', ['$scope', '$rootScope', '$stateParams', '$state', '$timeout', 'Stripe', function( $scope, $rootScope, $stateParams, $state, $timeout, Stripe ) {
     console.log('loading plans...');
     Stripe.plans.get_plan( $stateParams ).then(function(res){
         $scope.plan = res.data;
@@ -266,6 +266,30 @@ wp_stripe.app.controller( 'PlanEdit', ['$scope', '$rootScope', '$stateParams', '
                 title: 'Updated',
                 text: 'Plan Updated Successfully',
                 type: 'success'
+            });
+        });
+    };
+
+    $scope.deletePlan = function() {
+        swal({
+            title: 'Delete Stripe Plan',
+            text: 'Are you sure you want to remove this plan?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Delete',
+            cancelButtonText: 'Cancel',
+            closeOnConfirm: false,
+        },
+        function( isConfirm ) {
+            Stripe.plans.delete_plan($scope.plan).then(function (res) {
+                if (res.data.deleted) {
+                    swal({
+                        title: 'Deleted',
+                        text: 'Plan Deleted Successfully',
+                        type: 'success'
+                    });
+                    $state.go('plans');
+                }
             });
         });
     }

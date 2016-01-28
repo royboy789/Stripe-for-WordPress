@@ -11,9 +11,9 @@ Plugin is built in AngularJS, it is a single page client side application that r
 I have created a few endpoins if you want to extend. All under the `stripe-wp` namespace  
 + `stripe-wp/settings` - save the secret keys and mode
 + `stripe-wp/customers` - __GET__ customers
-+ `stripe-wp/customers/:id` - __GET__ customer or __POST__ to save customer
++ `stripe-wp/customers/:id` - __GET__ customer |  __POST__ to save customer | __DELETE__ a customer
 + `stripe-wp/plans` - __GET__ plans
-+ `stripe/plans/:id` - __GET__ plan or __POST__ to save plan
++ `stripe/plans/:id` - __GET__ plan | __POST__ to save plan | __DELETE__ a plan
 
 #To Install
 + Clone Repo
