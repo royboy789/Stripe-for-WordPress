@@ -1,0 +1,41 @@
+<h2>Customer Detail</h2>
+<form class="row" ng-submit="saveCustomer()">
+    <div class="col-sm-9">
+        <article ng-repeat="(key,value) in customer" ng-if="key != 'sources' ">
+            <dl>
+                <dt><h4>{{key}}</h4></dt>
+
+                <dd ng-hide="showInput(key)" ng-if="key != 'subscriptions'">{{value}}</dd>
+
+                <dd ng-show="showInput(key)" ng-if="key != 'metadata'">
+                    <input ng-model="customer[key]" placeholder="{{key}}" class="form-control" />
+                    <em ng-if="key == 'account_balance'">In 1/100 (i.e pennies)</em>
+                </dd>
+
+                <dd ng-if="key == 'metadata'">
+                    <!-- Handling MetaData -->
+                    <ul>
+                        <li ng-repeat="(metakey,metavalue) in value">
+                            <strong>{{metakey}}</strong>: {{metavalue}}
+                        </li>
+                    </ul>
+                </dd>
+
+                <dd ng-if="key == 'subscriptions' ">
+                    <!-- Handling Subscriptions -->
+                    <span ng-if="value.data.length == 0">No Subscriptions</span>
+                    <span  ng-if="customer.subscriptions.data" ng-repeat="sub in customer.subscriptions.data">
+                        <strong>{{sub.plan.name}}</strong>: ${{sub.plan.amount / 100}} / {{sub.plan.interval}}
+                    </span>
+                </dd>
+
+            </dl>
+        </article>
+    </div>
+    <div class="col-sm-3">
+        <p class="text-center" ng-show="updated">Updated!</p>
+        <button type="submit" class="btn btn-block btn-success">Save Customer</button>
+        <hr />
+        <a ui-sref="customerDetail({id:customer.id})" class="btn btn-block btn-primary">View Customer</a>
+    </div>
+</form>

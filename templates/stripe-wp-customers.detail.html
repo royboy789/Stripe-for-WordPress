@@ -1,0 +1,33 @@
+<h2>Customer Detail</h2>
+<div class="row">
+    <div class="col-sm-8">
+        <article ng-repeat="(key,value) in customer" ng-if="key != 'sources' ">
+            <dl>
+                <dt><h4>{{key}}</h4></dt>
+
+                <dd ng-if="showValue(key)">{{value}}</dd>
+
+                <dd ng-if="key == 'account_balance'">${{value / 100}}</dd>
+                <dd ng-if="key == 'metadata'">
+                    <!-- Handling MetaData -->
+                    <ul>
+                        <li ng-repeat="(metakey,metavalue) in value">
+                            <strong>{{metakey}}</strong>: {{metavalue}}
+                        </li>
+                    </ul>
+                </dd>
+
+                <dd ng-if="key == 'subscriptions' ">
+                    <!-- Handling Subscriptions -->
+                    <span ng-if="value.data.length == 0">No Subscriptions</span>
+                    <span  ng-if="customer.subscriptions.data" ng-repeat="sub in customer.subscriptions.data">
+                        <strong>{{sub.plan.name}}</strong>: ${{sub.plan.amount / 100}} / {{sub.plan.interval}}
+                    </span>
+                </dd>
+            </dl>
+        </article>
+    </div>
+    <div class="col-sm-4">
+        <a ui-sref="customerEdit({id:customer.id})" class="btn btn-block btn-warning">Edit</a>
+    </div>
+</div>

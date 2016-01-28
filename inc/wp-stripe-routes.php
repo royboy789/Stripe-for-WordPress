@@ -5,8 +5,6 @@ require 'stripe-api/stripe-api-customers.php';
 
 class wp_stripe_routes {
 
-
-
 	function register_routes() {
 		/*
 		 * Setup Classes
@@ -32,8 +30,21 @@ class wp_stripe_routes {
 		 * Customers API
 		 */
 		register_rest_route( 'stripe-wp', '/customers', array(
-			'methods' => 'GET',
-			'callback' => array( $customers_api, 'get_customers' ),
+			array(
+				'methods' => 'GET',
+				'callback' => array( $customers_api, 'get_customers' ),
+			)
+		));
+
+		register_rest_route( 'stripe-wp', '/customers/(?P<id>.+)', array(
+			array(
+				'methods' => 'POST',
+				'callback' => array( $customers_api, 'save_customer' ),
+			),
+			array(
+				'methods' => 'GET',
+				'callback' => array( $customers_api, 'get_customers' ),
+			)
 		));
 	}
 }

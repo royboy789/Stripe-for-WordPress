@@ -20,8 +20,11 @@ class wp_stripe_menu {
                         <nav class="navbar navbar-default">
                             <div class="collapse navbar-collapse">
                                 <ul class="nav navbar-nav">
-                                    <li ng-class="isActiveNav(\'main\');">
-                                        <a ui-sref="main">Settings</a>
+                                    <li ng-class="isActiveNav(\'dashboard\');">
+                                        <a ui-sref="dashboard">Dashboard</a>
+                                    </li>
+                                    <li ng-class="isActiveNav(\'settings\');">
+                                        <a ui-sref="settings">Settings</a>
                                     </li>
                                     <li ng-class="isActiveNav(\'customers\');">
                                         <a ui-sref="customers">Customers</a>

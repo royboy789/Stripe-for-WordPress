@@ -27,10 +27,14 @@ class wp_stripe_customers {
 
 		try {
 			$args = array( 'limit' => 10 );
-			if( isset( $data['id'] ) ) {
-				$args['starting_after'] = $data['id'];
+			if( isset( $data['starting_after'] ) ) {
+				$args['starting_after'] = $data['starting_after'];
+				$customers = \Stripe\Customer::all($args);
+			} elseif( !isset( $data['starting_after'] ) && !isset( $data['id'] ) ) {
+				$customers = \Stripe\Customer::all(array('limit' => 10));
+			} elseif( isset( $data['id'] ) ) {
+				$customers = \Stripe\Customer::retrieve( $data['id'] );
 			}
-			$customers = \Stripe\Customer::all($args);
 			return new WP_REST_Response( $customers, 200 );
 
 		} catch( Stripe_AuthenticationError $e ) {
@@ -45,12 +49,56 @@ class wp_stripe_customers {
 
 			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
 
-		} catch ( Stripe_CardError $e ) {
+		} catch ( \Stripe\Error\Base $e ) {
 			$body = $e->getJsonBody();
 			$err = $body['error'];
 
 			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
 		}
+	}
+
+	function save_customer( WP_REST_Request $request ) {
+		$this->set_api_key();
+		$data = $request->get_params();
+
+		if( !isset( $data['id'] ) ) {
+			return new WP_Error( 'data', __( 'No Customer ID Set' ), array( 'status' => 404 ) );
+		}
+
+		try {
+
+			$customer = \Stripe\Customer::retrieve( $data['id'] );
+
+			if( isset( $data['account_balance'] ) ) {
+				$customer->account_balance = $data['account_balance'];
+			}
+			if( isset( $data['description'] ) ) {
+				$customer->description = $data['description'];
+			}
+
+			$customer->save();
+
+			return new WP_REST_Response( $customer, 200 );
+
+		} catch( Stripe_AuthenticationError $e ) {
+			$body = $e->getJsonBody();
+			$err = $body['error'];
+
+			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
+
+		} catch( Stripe_Error $e ) {
+			$body = $e->getJsonBody();
+			$err = $body['error'];
+
+			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
+
+		} catch ( \Stripe\Error\Base $e ) {
+			$body = $e->getJsonBody();
+			$err = $body['error'];
+
+			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
+		}
+
 	}
 
 }

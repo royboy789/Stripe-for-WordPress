@@ -1,6 +1,6 @@
 <h2>CUSTOMERS</h2>
 
-<article class="row" ng-repeat="customer in customers track by $index">
+<article class="row customer-list" ng-repeat="customer in customers track by $index">
     <div class="col-sm-4">
         <h4>Customer:</h4>
         <strong>Email:</strong> {{customer.email}}
@@ -16,9 +16,13 @@
             </li>
         </ul>
     </div>
-    <div class="col-sm-5">
+    <div class="col-sm-3">
         <h4>Account Balance</h4>
-        $<span>{{customer.account_balance}}
+        $<span>{{customer.account_balance / 100}}
+    </div>
+    <div class="col-sm-2">
+        <a ui-sref="customerEdit({id:customer.id})" class="btn btn-block btn-warning">Edit</a>
+        <a ui-sref="customerDetail({id:customer.id})" class="btn btn-block btn-primary">View</a>
     </div>
 </article>
 
