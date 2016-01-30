@@ -1,32 +1,61 @@
 <h2>Customer Detail</h2>
 <form class="row" ng-submit="saveCustomer()">
     <div class="col-sm-9">
-        <article ng-repeat="(key,value) in customer" ng-if="key != 'sources' ">
+        <article>
             <dl>
-                <dt><h4>{{key}}</h4></dt>
-
-                <dd ng-hide="showInput(key)" ng-if="key != 'subscriptions'">{{value}}</dd>
-
-                <dd ng-show="showInput(key)" ng-if="key != 'metadata'">
-                    <input ng-model="customer[key]" placeholder="{{key}}" class="form-control" />
-                    <em ng-if="key == 'account_balance'">In 1/100 (i.e pennies)</em>
+                <dt><h4>{{customer.shipping.name}}</h4></dt>
+                <dd><strong>ID</strong> {{customer.id}}</dd>
+                <hr />
+                <dt><h4>Email</h4></dt>
+                <dd>{{customer.email}}</dd>
+                <hr />
+                <dt><h4>Phone</h4></dt>
+                <dd>
+                    <input ng-model="customer.shipping.phone" class="form-control" />
                 </dd>
-
-                <dd ng-if="key == 'metadata'">
-                    <!-- Handling MetaData -->
+                <hr/>
+                <dt><h4>Subscriptions</h4></dt>
+                <dd>
+                    <span ng-if="customer.subscriptions.data.length == 0">No Subscriptions</span>
+                    <span  ng-if="customer.subscriptions.data" ng-repeat="sub in customer.subscriptions.data">
+                        <strong>{{sub.plan.name}}</strong>: ${{sub.plan.amount / 100}} / {{sub.plan.interval}}
+                    </span>
+                </dd>
+                <hr />
+                <dt><h4>Account Balance</h4></dt>
+                <dd>
+                    <input ng-model="customer.account_balance" class="form-control" />
+                    <em>Must be in 1/100 (i.e pennies)</em>
+                </dd>
+                <hr />
+                <dt><h4>Customer Address</h4></dt>
+                <dd>
+                    <address>
+                        <input ng-model="customer.shipping.address.line1" class="form-control" />
+                        <input ng-model="customer.shipping.address.line2" class="form-control" />
+                        <input ng-model="customer.shipping.address.city" class="form-control" />
+                        <input ng-model="customer.shipping.address.state" class="form-control" />
+                        <input ng-model="customer.shipping.address.postal_code" class="form-control" />
+                    </address>
+                </dd>
+                <hr />
+                <dt><h4>Customer Meta Data</h4></dt>
+                <dd>
                     <ul>
-                        <li ng-repeat="(metakey,metavalue) in value">
+                        <li ng-repeat="(metakey,metavalue) in customer.metadata">
                             <strong>{{metakey}}</strong>: {{metavalue}}
                         </li>
                     </ul>
                 </dd>
-
-                <dd ng-if="key == 'subscriptions' ">
-                    <!-- Handling Subscriptions -->
-                    <span ng-if="value.data.length == 0">No Subscriptions</span>
-                    <span  ng-if="customer.subscriptions.data" ng-repeat="sub in customer.subscriptions.data">
-                        <strong>{{sub.plan.name}}</strong>: ${{sub.plan.amount / 100}} / {{sub.plan.interval}}
-                    </span>
+                <hr />
+                <dt><h4>Delinquent</h4></dt>
+                <dd>
+                    <span ng-if="customer.deliquent">Delinquent</span> <span ng-if="!customer.deliquent">No</span>
+                </dd>
+                <hr />
+                <dt><h4>Description</h4></dt>
+                <dd>
+                    <textarea ng-model="customer.description" class="form-control"></textarea>
                 </dd>
 
             </dl>

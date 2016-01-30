@@ -20,6 +20,8 @@
                 <label>Name</label>
                 <input id="user_firstname" ng-model="user.name['first']" class="form-control" placeholder="FIRST NAME" required />
                 <input id="user_lastname" ng-model="user.name['last']" class="form-control" placeholder="LAST NAME" required />
+                <label>Phone</label>
+                <input id="user_phone" ng-model="user.phone" class="form-control" placeholder="Phone: 123-456-7891" required />
             </div>
             <div class="form-group col-sm-6">
                 <label>Billing Address</label>
@@ -40,7 +42,7 @@
                 <input id="user_email" ng-model="user.email" type="email" class="form-control" placeholder="EMAIL" required />
                 <input id="user_username" ng-model="user.username" class="form-control" placeholder="USERNAME" required />
                 <div class="text-left buffer">
-                    <span class="btn btn-default" ng-click="change_step(1)"><< BACK</span>
+                    <span class="btn btn-default" ng-click="change_step(1, true)"><< BACK</span>
                 </div>
             </div>
             <div class="form-group col-sm-6">
@@ -70,7 +72,7 @@
                 </div>
             </div>
             <div class="buffer">
-                <span class="btn btn-default pull-left" ng-click="change_step(2)"><< Back</span>
+                <span class="btn btn-default pull-left" ng-click="change_step(2, true)"><< Back</span>
                 <button type="submit" class="btn btn-success pull-right" ng-show="stepValidate('3')">Sign Up!</button>
             </div>
         </div>

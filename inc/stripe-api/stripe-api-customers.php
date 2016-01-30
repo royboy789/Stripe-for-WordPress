@@ -75,6 +75,26 @@ class wp_stripe_customers {
 			if( isset( $data['description'] ) ) {
 				$customer->description = $data['description'];
 			}
+			if( isset( $data['shipping'] ) && isset( $data['shipping']['address']['line1'] ) ) {
+				$shipping = array(
+					"address" => array(
+						"line1" => $data['shipping']['address']['line1'],
+						"line2" => $data['shipping']['address']['line2'],
+						"city" => $data['shipping']['address']['city'],
+						"postal_code" => $data['shipping']['address']['postal_code'],
+						"state" => $data['shipping']['address']['state']
+					),
+					"name" => $data['shipping']['name'],
+				);
+			}
+
+			if( isset( $data['shipping'] ) && isset( $data['shipping']['phone'] ) ) {
+				$shipping['phone'] = $data['shipping']['phone'];
+			}
+
+			if( isset( $shipping ) && !empty( $shipping ) ) {
+				$customer->shipping = $shipping;
+			}
 
 			$customer->save();
 
@@ -171,6 +191,7 @@ class wp_stripe_customers {
 						"state" => $data['address']['state']
 					),
 					"name" => $data['name']['first'] . ' ' . $data['name']['last'],
+					"phone" => $data['phone'],
 				)
 
 			));

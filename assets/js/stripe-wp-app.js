@@ -328,8 +328,22 @@ wp_stripe.app.directive('stripeCustomer', function() {
         },
         controller: ['$scope', 'Stripe', function($scope, Stripe){
             $scope.group_step = 1;
-            $scope.change_step = function( step ) {
-                $scope.group_step = step;
+            $scope.change_step = function( step, back ) {
+                back = typeof back !== 'undefined' ? back : false;
+
+                if( $scope.group_step > parseInt( step ) ) {
+                    back = true;
+                }
+
+                if( back || $scope.stepValidate( $scope.group_step.toString() ) ) {
+                    $scope.group_step = step;
+                } else {
+                    swal({
+                        'title' : 'Required Fields',
+                        'text' : 'All Fields Required',
+                        'type' : 'error'
+                    });
+                }
             }
             $scope.user = {
                 cc: {}
@@ -342,6 +356,7 @@ wp_stripe.app.directive('stripeCustomer', function() {
                             $scope.user.name &&
                             $scope.user.name.first &&
                             $scope.user.name.last &&
+                            $scope.user.phone &&
                             $scope.user.address &&
                             $scope.user.address.line1 &&
                             $scope.user.address.city &&
@@ -382,30 +397,6 @@ wp_stripe.app.directive('stripeCustomer', function() {
                 }
             }
 
-            $scope.user = {
-                address: {
-                    city: "Woodland Hills",
-                    line1: "6031 Fountain Park Lane",
-                    line2: "Unit 13",
-                    postal_code: "91367",
-                    state: "CA",
-                },
-                cc: {
-                    number: "4242424242424242",
-                    cvc: "123",
-                    exp: {
-                        month: '10',
-                        year: '2017',
-                    }
-                },
-                email: "roy@roysivan.com",
-                name: {
-                    first: "Roy",
-                    last: "Sivan",
-                },
-                pass: "sambeber",
-                username: "royboy789"
-            }
 
             $scope.newUser = function() {
                 if( !$scope.planId ) {
