@@ -30,6 +30,27 @@
             <label for="prod-api">Live Secret Key</label>
             <input id="prod-api" ng-model="settings.keys.prod" placeholder="Stripe Production API Key" class="form-control" />
         </div>
+        <hr />
+        <h3>Confirmation Settings</h3>
+        <p>
+            What happens after a user signs up?
+        </p>
+        <div class="form-group">
+            <label for="confirmation">Confirmation</label>
+            <select id="confirmation" ng-model="settings.confirmation.type" class="form-control">
+                <option value="">Select One</option>
+                <option value="page">Redirect to Page</option>
+                <option value="message">Message</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <select ng-show="settings.confirmation.type == 'page'" ng-model="settings.confirmation.page_id" class="form-control">
+                <option value="">Choose A Page</option>
+                <option ng-repeat="page in pages track by $index" value="{{page.id}}">{{page.title.rendered}}</option>
+            </select>
+            <input ng-model="settings.confirmation.message" ng-show="settings.confirmation.type == 'message'" class="form-control" placeholder="Confirmation Message"/>
+        </div>
+        <hr/>
         <div class="text-center">
             <button id="update-settings" type="submit" class="btn btn-primary">Update Settings</button>
             <p ng-show="updated" id="updated">Updated!</p>

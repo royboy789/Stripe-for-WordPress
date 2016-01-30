@@ -137,5 +137,88 @@ class wp_stripe_customers {
 		}
 
 	}
+
+	function new_customer( WP_REST_Request $request ) {
+
+		$data = $request->get_params();
+		$this->set_api_key();
+
+		try {
+
+			$wp_user_id = wp_insert_user( array(
+				'user_login' => $data['username'],
+				'user_email' => $data['email'],
+				'user_pass' => $data['pass']
+			));
+
+			if ( is_wp_error( $wp_user_id ) ) {
+				return new WP_Error( 'wp-user', __( $wp_user_id->get_error_message() ), array( 'status' => 401 ) );
+			}
+
+			$customer = \Stripe\Customer::create(array(
+				"source" => $this->card_token( $data ),
+				"email" => $data['email'],
+				"plan" => $data['plan_id'],
+				"metadata" => array(
+						'user_id' => $wp_user_id
+				),
+				"shipping" => array(
+					"address" => array(
+						"line1" => $data['address']['line1'],
+						"line2" => $data['address']['line2'],
+						"city" => $data['address']['city'],
+						"postal_code" => $data['address']['postal_code'],
+						"state" => $data['address']['state']
+					),
+					"name" => $data['name']['first'] . ' ' . $data['name']['last'],
+				)
+
+			));
+
+
+			return new WP_REST_Response( $customer, 200 );
+
+		} catch( Stripe_AuthenticationError $e ) {
+			$body = $e->getJsonBody();
+			$err = $body['error'];
+			if( ! is_wp_error( $wp_user_id ) ) {
+				wp_delete_user( $wp_user_id );
+			}
+			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
+
+		} catch( Stripe_Error $e ) {
+			$body = $e->getJsonBody();
+			$err = $body['error'];
+			if( ! is_wp_error( $wp_user_id ) ) {
+				wp_delete_user( $wp_user_id );
+			}
+			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
+
+		} catch ( \Stripe\Error\Base $e ) {
+			$body = $e->getJsonBody();
+			$err = $body['error'];
+			if( ! is_wp_error( $wp_user_id ) ) {
+				wp_delete_user( $wp_user_id );
+			}
+			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
+		}
+	}
+
+	function card_token( $data ) {
+
+		$this->set_api_key();
+
+		$token = \Stripe\Token::create(array(
+			"card" => array(
+				"number" => $data['cc']['number'],
+				"exp_month" => $data['cc']['exp']['month'],
+				"exp_year" => $data['cc']['exp']['year'],
+				"cvc" => $data['cc']['cvc']
+			)
+		));
+
+		return $token;
+
+	}
 }
 ?>

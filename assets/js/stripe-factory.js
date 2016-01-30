@@ -67,6 +67,16 @@ wp_stripe.app.factory( 'Stripe', function( $resource, $q, $http ){
                 });
                 return response.promise;
             },
+            new: function( data ){
+                var url = stripe_wp_local.api_url + 'stripe-wp/customers/';
+                var response = $q.defer();
+                $http.post(url, data).then(function(res) {
+                    response.resolve( res );
+                },function(res){
+                    response.reject( res );
+                });
+                return response.promise;
+            },
         },
         plans: {
             get_plan: function( data ){

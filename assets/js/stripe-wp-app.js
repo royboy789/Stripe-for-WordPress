@@ -34,14 +34,21 @@ wp_stripe.app.filter( 'to_trusted', function( $sce ){
 /*
  * Settings Controller
  */
-wp_stripe.app.controller( 'Settings', ['$scope', '$rootScope', '$timeout', 'Stripe', function( $scope, $rootScope, $timeout, Stripe ) {
+wp_stripe.app.controller( 'Settings', ['$scope', '$rootScope', '$timeout', '$http', 'Stripe', function( $scope, $rootScope, $timeout, $http, Stripe ) {
     console.log('loading Settings page..');
 
     Stripe.get_settings().then(function(res){
+
         $scope.settings = {
             keys: {},
-            mode: ''
+            mode: '',
+            confirmation: {}
         };
+
+        $http.get( stripe_wp_local.api_url + 'wp/v2/pages?_wpnonce=' + stripe_wp_local.nonce).then(function(res) {
+            $scope.pages = res.data;
+        });
+
         if( res.data.mode ) {
             $scope.settings.mode = res.data.mode;
         }
@@ -51,6 +58,13 @@ wp_stripe.app.controller( 'Settings', ['$scope', '$rootScope', '$timeout', 'Stri
         if( res.data.keys.prod ) {
             $scope.settings.keys.prod = res.data.keys.prod;
         }
+
+        $scope.settings.confirmation = res.data.confirmation
+
+        if( !$scope.settings.confirmation.message ) {
+            $scope.settings.confirmation.message = '';
+        }
+
     }, function(res){
         $scope.settings = {
             keys: {
@@ -178,7 +192,6 @@ wp_stripe.app.controller( 'CustomerEdit', ['$scope', '$rootScope', '$stateParams
                     if( isConfirm ) {
                         // Delete WP User
                         Users.delete({nonce: stripe_wp_local.nonce, id: $scope.customer.metadata.user_id, force: true }, function(res){
-                            console.log( res );
                             // Delete Stripe Customer
                             Stripe.customer.delete( $scope.customer ).then(function(res){
                                 if( res.data.deleted ){
@@ -236,6 +249,13 @@ wp_stripe.app.controller( 'PlansList', ['$scope', '$rootScope', '$stateParams', 
     Stripe.plans.get_plan().then(function(res){
         $scope.plans = res.data.data;
     });
+
+    $scope.insertShortCode = function( id ) {
+        console.log( id );
+        swal.close();
+        jQuery('#wp-stripe-shortcode-inserter-app').empty();
+        wp.media.editor.insert('[stripe-wp-customer plan_id="' + id + '"]');
+    }
 
 }]);
 
@@ -295,3 +315,143 @@ wp_stripe.app.controller( 'PlanEdit', ['$scope', '$rootScope', '$stateParams', '
     }
 
 }]);
+
+/*
+ * New Customer Directive
+ */
+wp_stripe.app.directive('stripeCustomer', function() {
+    return {
+        restrict: 'E',
+        templateUrl: stripe_wp_local.template_directory + '/directives/stripe-wp-customer.new.html',
+        scope: {
+            planId: '@planId'
+        },
+        controller: ['$scope', 'Stripe', function($scope, Stripe){
+            $scope.group_step = 1;
+            $scope.change_step = function( step ) {
+                $scope.group_step = step;
+            }
+            $scope.user = {
+                cc: {}
+            };
+
+            $scope.stepValidate = function( step ) {
+                switch( step ) {
+                    case '1':
+                        if (
+                            $scope.user.name &&
+                            $scope.user.name.first &&
+                            $scope.user.name.last &&
+                            $scope.user.address &&
+                            $scope.user.address.line1 &&
+                            $scope.user.address.city &&
+                            $scope.user.address.postal_code &&
+                            $scope.user.address.state.length
+                        ) {
+                            return true;
+                        }
+                    break;
+                    case '2':
+                        if(
+                            $scope.user.email &&
+                            $scope.user.username &&
+                            $scope.user.pass &&
+                            $scope.pass
+                        ) {
+                            if( $scope.pass != $scope.user.pass ) {
+                                $scope.pass_mismatch = true;
+                            } else {
+                                $scope.pass_mismatch = false;
+                                return true;
+                            }
+                        }
+                    break;
+                    case '3':
+                        if(
+                            $scope.user.cc.number &&
+                            $scope.user.cc.exp.month &&
+                            $scope.user.cc.exp.year &&
+                            $scope.user.cc.cvc
+                        ) {
+                            return true;
+                        }
+                    break;
+                    default:
+                        return false;
+
+                }
+            }
+
+            $scope.user = {
+                address: {
+                    city: "Woodland Hills",
+                    line1: "6031 Fountain Park Lane",
+                    line2: "Unit 13",
+                    postal_code: "91367",
+                    state: "CA",
+                },
+                cc: {
+                    number: "4242424242424242",
+                    cvc: "123",
+                    exp: {
+                        month: '10',
+                        year: '2017',
+                    }
+                },
+                email: "roy@roysivan.com",
+                name: {
+                    first: "Roy",
+                    last: "Sivan",
+                },
+                pass: "sambeber",
+                username: "royboy789"
+            }
+
+            $scope.newUser = function() {
+                if( !$scope.planId ) {
+                    swal({
+                        title: 'No Plan ID Set',
+                        text: 'No Subscription Plan ID Set',
+                        type: 'error',
+                    });
+                    return false;
+                }
+                $scope.user.plan_id = $scope.planId;
+
+                Stripe.customer.new( $scope.user).then(function(res){
+                    $scope.user = {
+                        cc: {}
+                    };
+
+                    if( !stripe_wp_local.confirmation.type ) {
+                        swal({
+                            'title' : 'Success!',
+                            'text' : 'We have successfully added you!',
+                            'type' : 'success'
+                        });
+                    }
+
+                    if( stripe_wp_local.confirmation.type == 'message' ) {
+                        swal({
+                            'title' : 'Success!',
+                            'text' : stripe_wp_local.confirmation.message,
+                            'type' : 'success'
+                        });
+                    }
+
+                    if( stripe_wp_local.confirmation.type == 'page' ) {
+                        window.location = stripe_wp_local.confirmation.page;
+                    }
+
+                }, function(res){
+                    console.log( 'error', res );
+                    swal({
+                        'title' : 'Error',
+                        'text' : 'An Error Occured: ' + res.data.message,
+                        'type' : 'error'
+                    });
+                });
+            }
+        }]
+    }
+})

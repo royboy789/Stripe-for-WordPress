@@ -34,6 +34,10 @@ class wp_stripe_routes {
 			array(
 				'methods' => 'GET',
 				'callback' => array( $customers_api, 'get_customers' ),
+			),
+			array(
+				'methods' => 'POST',
+				'callback' => array( $customers_api, 'new_customer' )
 			)
 		));
 

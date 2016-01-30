@@ -1,0 +1,78 @@
+<div class="stripe-wp-new-customer">
+    <ul class="progress-indicator">
+        <li ng-click="change_step(1)" ng-class="{'active': group_step == 1, 'completed': group_step > 1 || !new_group }">
+            <span class="bubble"></span>
+            User Information
+        </li>
+        <li ng-click="change_step(2)" ng-class="{'active': group_step == 2, 'completed': group_step > 2 || !new_group  }">
+            <span class="bubble"></span>
+            Account Information
+        </li>
+        <li ng-click="change_step(3)" ng-class="{'active': group_step == 3, 'completed': group_step > 3 || !new_group }">
+            <span class="bubble"></span>
+            Payment & Checkout
+        </li>
+    </ul>
+
+    <form ng-submit="newUser()">
+        <div ng-show="group_step == 1" class="row">
+            <div class="form-group col-sm-6">
+                <label>Name</label>
+                <input id="user_firstname" ng-model="user.name['first']" class="form-control" placeholder="FIRST NAME" required />
+                <input id="user_lastname" ng-model="user.name['last']" class="form-control" placeholder="LAST NAME" required />
+            </div>
+            <div class="form-group col-sm-6">
+                <label>Billing Address</label>
+                <input id="user_address_lineOne" ng-model="user.address['line1']" class="form-control" placeholder="STREET ADDRESS" required />
+                <input id="user_address_lineTwo" ng-model="user.address['line2']" class="form-control" placeholder="ADDRESS LINE 2" required />
+                <input id="user_address_city" ng-model="user.address['city']" class="form-control" placeholder="CITY" required />
+                <input id="user_address_state" ng-model="user.address['state']" class="form-control" placeholder="STATE" required />
+                <input id="user_address_zip" ng-model="user.address['postal_code']" class="form-control" placeholder="ZIP CODE" required />
+
+                <div class="text-right buffer" ng-show="stepValidate('1')">
+                    <span class="btn btn-default" ng-click="change_step(2)">Next Step >></span>
+                </div>
+            </div>
+        </div>
+        <div ng-show="group_step == 2" class="row">
+            <div class="form-group col-sm-6">
+                <label>Email & Username</label>
+                <input id="user_email" ng-model="user.email" type="email" class="form-control" placeholder="EMAIL" required />
+                <input id="user_username" ng-model="user.username" class="form-control" placeholder="USERNAME" required />
+                <div class="text-left buffer">
+                    <span class="btn btn-default" ng-click="change_step(1)"><< BACK</span>
+                </div>
+            </div>
+            <div class="form-group col-sm-6">
+                <label>Password</label>
+                <input id="user_password" class="form-control" type="password" ng-model="pass" placeholder="PASSWORD"required />
+                <input id="user_password_conf" class="form-control" type="password" ng-model="user.pass" placeholder="PASSWORD CONFIRM" required />
+                <em class="red" ng-show="pass_mismatch">passwords don't match</em>
+                <div class="text-right buffer" ng-show="stepValidate('2')">
+                    <span class="btn btn-default" ng-click="change_step(3)">Next Step >></span>
+                </div>
+            </div>
+        </div>
+        <div ng-show="group_step == 3">
+            <div class="form-group">
+                <label>Credit Card Information</label>
+                <input id="cc_num" ng-model="user.cc['number']" class="form-control" placeholder="Credit Card Number" required />
+                <div class="row">
+                    <div class="col-sm-4">
+                        <input id="exp_month" ng-model="user.cc['exp']['month']" placeholder="EXP Month" class="form-control" required />
+                    </div>
+                    <div class="col-sm-4">
+                        <input id="exp_month" ng-model="user.cc['exp']['year']" placeholder="EXP Year" class="form-control" required />
+                    </div>
+                    <div class="col-sm-4">
+                        <input id="cc_cvc" ng-model="user.cc['cvc']" placeholder="CVC Code" class="form-control" required />
+                    </div>
+                </div>
+            </div>
+            <div class="buffer">
+                <span class="btn btn-default pull-left" ng-click="change_step(2)"><< Back</span>
+                <button type="submit" class="btn btn-success pull-right" ng-show="stepValidate('3')">Sign Up!</button>
+            </div>
+        </div>
+    </form>
+</div>
