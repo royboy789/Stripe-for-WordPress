@@ -175,7 +175,7 @@ class wp_stripe_customers {
 				return new WP_Error( 'wp-user', __( $wp_user_id->get_error_message() ), array( 'status' => 401 ) );
 			}
 
-			$customer = \Stripe\Customer::create(array(
+			$customer_data = array(
 				"source" => $this->card_token( $data ),
 				"email" => $data['email'],
 				"plan" => $data['plan_id'],
@@ -185,7 +185,6 @@ class wp_stripe_customers {
 				"shipping" => array(
 					"address" => array(
 						"line1" => $data['address']['line1'],
-						"line2" => $data['address']['line2'],
 						"city" => $data['address']['city'],
 						"postal_code" => $data['address']['postal_code'],
 						"state" => $data['address']['state']
@@ -193,8 +192,15 @@ class wp_stripe_customers {
 					"name" => $data['name']['first'] . ' ' . $data['name']['last'],
 					"phone" => $data['phone'],
 				)
+			);
 
-			));
+			if( isset( $data['address']['line2'] ) ) {
+				$customer_data['shipping']['address']['line2'] = $data['address']['line2'];
+			}
+
+			$customer = \Stripe\Customer::create( $customer_data );
+
+			update_user_meta( $wp_user_id, '__stripe_cus_id', $customer->id );
 
 
 			return new WP_REST_Response( $customer, 200 );

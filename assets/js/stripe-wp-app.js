@@ -15,6 +15,25 @@ wp_stripe.app.run( function( $rootScope, $state ) {
         }
     };
 
+    $rootScope.nav_items = [
+        {
+            title: 'Dashboard',
+            state: 'dashboard'
+        },
+        {
+            title: 'Settings',
+            state: 'settings'
+        },
+        {
+            title: 'Plans',
+            state: 'plans'
+        },
+        {
+            title: 'Customers',
+            state: 'customers'
+        }
+    ]
+
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
         //console.log(toState);
     });
@@ -445,4 +464,4 @@ wp_stripe.app.directive('stripeCustomer', function() {
             }
         }]
     }
-})
+});

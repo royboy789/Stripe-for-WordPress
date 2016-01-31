@@ -3,9 +3,18 @@
  */
 wp_stripe.app.factory( 'Stripe', function( $resource, $q, $http ){
     return {
-        get_settings: function(){
+        get_settings: function( data ){
             var response = $q.defer();
-            $http.get(stripe_wp_local.api_url + 'stripe-wp/settings').then(function(res) {
+            var config = {}
+            if( data && data.more_settings ) {
+                config.params = {
+                    'more_settings[]': [],
+                };
+                angular.forEach( data.more_settings, function( key, value ) {
+                    config.params['more_settings[]'].push( key );
+                });
+            }
+            $http.get(stripe_wp_local.api_url + 'stripe-wp/settings', config ).then(function(res) {
                 response.resolve( res );
             });
             return response.promise;
