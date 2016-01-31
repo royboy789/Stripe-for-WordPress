@@ -29,7 +29,11 @@ var jsFileListFED = [
 gulp.task( 'sass', function() {
     gulp.src('./assets/scss/wp-stripe-styles.scss')
         .pipe(sourcemaps.init())
-        .pipe(sass().on('error', sass.logError))
+        .pipe(sass({
+            outputStyle: 'compressed'
+          })
+          .on('error', sass.logError)
+        )
         .pipe(sourcemaps.write())
         .pipe(gulp.dest('./build/css'));
 });
@@ -37,7 +41,11 @@ gulp.task( 'sass', function() {
 gulp.task( 'sassFED', function() {
     gulp.src('./assets/scss/wp-stripe-fed-styles.scss')
         .pipe(sourcemaps.init())
-        .pipe(sass().on('error', sass.logError))
+        .pipe(sass({
+            outputStyle: 'compressed'
+          })
+          .on('error', sass.logError)
+        )
         .pipe(sourcemaps.write())
         .pipe(gulp.dest('./build/front-end/css'));
 });
