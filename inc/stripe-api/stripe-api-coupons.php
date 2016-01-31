@@ -1,7 +1,6 @@
 <?php
-require 'stripe-lib/init.php';
 
-class wp_stripe_customers {
+class wp_stripe_coupons {
 
 	function set_api_key() {
 
@@ -19,7 +18,7 @@ class wp_stripe_customers {
 
 	}
 
-	function get_customers( WP_REST_Request $data ) {
+	function get_coupons( WP_REST_Request $data ) {
 		$this->set_api_key();
 
 		$data = $data->get_params();
@@ -29,13 +28,13 @@ class wp_stripe_customers {
 			$args = array( 'limit' => 10 );
 			if( isset( $data['starting_after'] ) ) {
 				$args['starting_after'] = $data['starting_after'];
-				$customers = \Stripe\Customer::all($args);
+				$coupons = \Stripe\Coupon::all($args);
 			} elseif( !isset( $data['starting_after'] ) && !isset( $data['id'] ) ) {
-				$customers = \Stripe\Customer::all(array('limit' => 10));
+				$coupons = \Stripe\Coupon::all(array('limit' => 10));
 			} elseif( isset( $data['id'] ) ) {
-				$customers = \Stripe\Customer::retrieve( $data['id'] );
+				$coupons = \Stripe\Coupon::retrieve( $data['id'] );
 			}
-			return new WP_REST_Response( $customers, 200 );
+			return new WP_REST_Response( $coupons, 200 );
 
 		} catch( Stripe_AuthenticationError $e ) {
 			$body = $e->getJsonBody();
@@ -57,23 +56,23 @@ class wp_stripe_customers {
 		}
 	}
 
-	function save_customer( WP_REST_Request $request ) {
+	function save_coupon( WP_REST_Request $request ) {
 		$this->set_api_key();
 		$data = $request->get_params();
 
 		if( !isset( $data['id'] ) ) {
-			return new WP_Error( 'data', __( 'No Customer ID Set' ), array( 'status' => 404 ) );
+			return new WP_Error( 'data', __( 'No coupon ID Set' ), array( 'status' => 404 ) );
 		}
 
 		try {
 
-			$customer = \Stripe\Customer::retrieve( $data['id'] );
+			$coupon = \Stripe\Coupon::retrieve( $data['id'] );
 
 			if( isset( $data['account_balance'] ) ) {
-				$customer->account_balance = $data['account_balance'];
+				$coupon->account_balance = $data['account_balance'];
 			}
 			if( isset( $data['description'] ) ) {
-				$customer->description = $data['description'];
+				$coupon->description = $data['description'];
 			}
 			if( isset( $data['shipping'] ) && isset( $data['shipping']['address']['line1'] ) ) {
 				$shipping = array(
@@ -93,12 +92,12 @@ class wp_stripe_customers {
 			}
 
 			if( isset( $shipping ) && !empty( $shipping ) ) {
-				$customer->shipping = $shipping;
+				$coupon->shipping = $shipping;
 			}
 
-			$customer->save();
+			$coupon->save();
 
-			return new WP_REST_Response( $customer, 200 );
+			return new WP_REST_Response( $coupon, 200 );
 
 		} catch( Stripe_AuthenticationError $e ) {
 			$body = $e->getJsonBody();
@@ -121,21 +120,21 @@ class wp_stripe_customers {
 
 	}
 
-	function delete_customer( WP_REST_Request $request ) {
+	function delete_coupon( WP_REST_Request $request ) {
 		$this->set_api_key();
 		$data = $request->get_params();
 
 		if( !isset( $data['id'] ) ) {
-			return new WP_Error( 'data', __( 'No Customer ID Set' ), array( 'status' => 404 ) );
+			return new WP_Error( 'data', __( 'No coupon ID Set' ), array( 'status' => 404 ) );
 		}
 
 		try {
 
-			$customer = \Stripe\Customer::retrieve( $data['id'] );
+			$coupon = \Stripe\Coupon::retrieve( $data['id'] );
 
-			$customer->delete();
+			$coupon->delete();
 
-			return new WP_REST_Response( $customer, 200 );
+			return new WP_REST_Response( $coupon, 200 );
 
 		} catch( Stripe_AuthenticationError $e ) {
 			$body = $e->getJsonBody();
@@ -158,97 +157,32 @@ class wp_stripe_customers {
 
 	}
 
-	function new_customer( WP_REST_Request $request ) {
+	function new_coupon( WP_REST_Request $request ) {
 
 		$data = $request->get_params();
 		$this->set_api_key();
 
 		try {
 
-			$wp_user_id = wp_insert_user( array(
-				'user_login' => $data['username'],
-				'user_email' => $data['email'],
-				'user_pass' => $data['pass']
-			));
+			$coupon = \Stripe\Coupon::create( $data );
 
-			if ( is_wp_error( $wp_user_id ) ) {
-				return new WP_Error( 'wp-user', __( $wp_user_id->get_error_message() ), array( 'status' => 401 ) );
-			}
-
-			$customer_data = array(
-				"source" => $this->card_token( $data ),
-				"email" => $data['email'],
-				"plan" => $data['plan_id'],
-				"metadata" => array(
-						'user_id' => $wp_user_id
-				),
-				"shipping" => array(
-					"address" => array(
-						"line1" => $data['address']['line1'],
-						"city" => $data['address']['city'],
-						"postal_code" => $data['address']['postal_code'],
-						"state" => $data['address']['state']
-					),
-					"name" => $data['name']['first'] . ' ' . $data['name']['last'],
-					"phone" => $data['phone'],
-				)
-			);
-
-			if( isset( $data['address']['line2'] ) ) {
-				$customer_data['shipping']['address']['line2'] = $data['address']['line2'];
-			}
-			if( isset( $data['coupon'] ) ) {
-				$customer_data['coupon'] = $data['coupon'];
-			}
-
-			$customer = \Stripe\Customer::create( $customer_data );
-
-			update_user_meta( $wp_user_id, '__stripe_cus_id', $customer->id );
-
-
-			return new WP_REST_Response( $customer, 200 );
+			return new WP_REST_Response( $coupon, 200 );
 
 		} catch( Stripe_AuthenticationError $e ) {
 			$body = $e->getJsonBody();
 			$err = $body['error'];
-			if( ! is_wp_error( $wp_user_id ) ) {
-				wp_delete_user( $wp_user_id );
-			}
 			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
 
 		} catch( Stripe_Error $e ) {
 			$body = $e->getJsonBody();
 			$err = $body['error'];
-			if( ! is_wp_error( $wp_user_id ) ) {
-				wp_delete_user( $wp_user_id );
-			}
 			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
 
 		} catch ( \Stripe\Error\Base $e ) {
 			$body = $e->getJsonBody();
 			$err = $body['error'];
-			if( ! is_wp_error( $wp_user_id ) ) {
-				wp_delete_user( $wp_user_id );
-			}
 			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
 		}
-	}
-
-	function card_token( $data ) {
-
-		$this->set_api_key();
-
-		$token = \Stripe\Token::create(array(
-			"card" => array(
-				"number" => $data['cc']['number'],
-				"exp_month" => $data['cc']['exp']['month'],
-				"exp_year" => $data['cc']['exp']['year'],
-				"cvc" => $data['cc']['cvc']
-			)
-		));
-
-		return $token;
-
 	}
 }
 ?>

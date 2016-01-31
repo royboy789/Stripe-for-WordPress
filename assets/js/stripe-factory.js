@@ -125,6 +125,67 @@ wp_stripe.app.factory( 'Stripe', function( $resource, $q, $http ){
                 });
                 return response.promise;
             }
-        }
+        },
+        coupons: {
+            get_coupons: function( data ){
+                var url = stripe_wp_local.api_url + 'stripe-wp/coupons';
+                if( data && data.starting_after ){
+                    url = url + '?starting_after=' + data.starting_after;
+                }
+                if( data && data.id ){
+                    url = url + '?id=' + data.id;
+                }
+                var response = $q.defer();
+                $http.get(url).then(function(res) {
+                    response.resolve( res );
+                });
+                return response.promise;
+            },
+            save: function( data ){
+                var url = stripe_wp_local.api_url + 'stripe-wp/coupons/';
+                if( data.id ) {
+                    url = url + data.id;
+                }
+                var response = $q.defer();
+                $http.post(url, data).then(function(res) {
+                    response.resolve( res );
+                });
+                return response.promise;
+            },
+            get: function( data ){
+                var url = stripe_wp_local.api_url + 'stripe-wp/coupons/';
+                if( data.id ) {
+                    url = url + data.id;
+                }
+                var response = $q.defer();
+                $http.get(url).then(function(res) {
+                    response.resolve( res );
+                });
+                return response.promise;
+            },
+            delete: function( data ){
+                var url = stripe_wp_local.api_url + 'stripe-wp/coupons/';
+                if( data.id ) {
+                    url = url + data.id;
+                } else {
+                    return 'No Customer ID Set';
+                }
+                var response = $q.defer();
+                $http.delete(url).then(function(res) {
+                    response.resolve( res );
+                });
+                return response.promise;
+            },
+            new: function( data ){
+                var url = stripe_wp_local.api_url + 'stripe-wp/coupons/';
+                var response = $q.defer();
+                $http.post(url, data).then(function(res) {
+                    response.resolve( res );
+                },function(res){
+                    response.reject( res );
+                });
+                return response.promise;
+            },
+        },
     };
 });

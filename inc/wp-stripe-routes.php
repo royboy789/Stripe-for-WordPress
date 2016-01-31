@@ -3,6 +3,7 @@
 require 'stripe-api/stripe-api-settings.php';
 require 'stripe-api/stripe-api-customers.php';
 require 'stripe-api/stripe-api-plans.php';
+require 'stripe-api/stripe-api-coupons.php';
 class wp_stripe_routes {
 
 	function register_routes() {
@@ -12,6 +13,7 @@ class wp_stripe_routes {
 		$settings_api = new wp_stripe_settings();
 		$customers_api = new wp_stripe_customers();
 		$plans_api = new wp_stripe_plans();
+		$coupons_api = new wp_stripe_coupons();
 
 
 		/**
@@ -79,6 +81,36 @@ class wp_stripe_routes {
 				'methods' => 'DELETE',
 				'callback' => array( $plans_api, 'delete_plan' )
 			)
+		));
+
+		/**
+		 * Coupons
+		 */
+
+		register_rest_route( 'stripe-wp', '/coupons', array(
+			array(
+				'methods' => 'GET',
+				'callback' => array( $coupons_api, 'get_coupons' ),
+			),
+			array(
+				'methods' => 'POST',
+				'callback' => array( $coupons_api, 'new_coupon' )
+			)
+		));
+
+		register_rest_route( 'stripe-wp', '/coupons/(?P<id>.+)', array(
+			array(
+				'methods' => 'POST',
+				'callback' => array( $coupons_api, 'save_coupon' ),
+			),
+			array(
+				'methods' => 'GET',
+				'callback' => array( $coupons_api, 'get_coupons' ),
+			),
+			array(
+				'methods' => 'DELETE',
+				'callback' => array( $coupons_api, 'delete_coupon' ),
+			),
 		));
 
 	}

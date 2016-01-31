@@ -41,6 +41,11 @@
                     </ul>
                 </dd>
                 <hr />
+                <dt ng-if="customer.discount">Customer Discounts</dt>
+                <dd ng-if="customer.discount">
+                    {{customer.discount.coupon.id}}
+                </dd>
+                <hr />
                 <dt><h4>Delinquent</h4></dt>
                 <dd>
                     <span ng-if="customer.deliquent">Delinquent</span> <span ng-if="!customer.deliquent">No</span>

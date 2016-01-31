@@ -31,6 +31,10 @@ wp_stripe.app.run( function( $rootScope, $state ) {
         {
             title: 'Customers',
             state: 'customers'
+        },
+        {
+            title: 'Coupons',
+            state: 'coupons'
         }
     ]
 
@@ -143,11 +147,6 @@ wp_stripe.app.controller( 'CustomerDetail', ['$scope', '$rootScope', '$statePara
     Stripe.customer.get_customers( $stateParams).then(function(res){
         $scope.customer = res.data;
     });
-
-    $scope.showValue = function( key ) {
-        var no_show = ['subscriptions', 'metadata', 'account_balance'];
-        if( no_show.indexOf(key) > -1 ) { return false; } else { return true; }
-    }
 }]);
 
 /*
@@ -335,6 +334,28 @@ wp_stripe.app.controller( 'PlanEdit', ['$scope', '$rootScope', '$stateParams', '
 
 }]);
 
+
+/*
+ * Coupons Controller
+ */
+wp_stripe.app.controller( 'CouponList', ['$scope', '$rootScope', 'Stripe', function( $scope, $rootScope, Stripe ) {
+    Stripe.coupons.get_coupons().then(function (res) {
+        $scope.more = res.data.has_more;
+        $scope.coupons = res.data.data;
+    });
+}]);
+
+
+/*
+ * Coupons Detail
+ */
+wp_stripe.app.controller( 'CouponDetail', ['$scope', '$rootScope', '$stateParams', 'Stripe', function( $scope, $rootScope, $stateParams, Stripe ) {
+    Stripe.coupons.get_coupons( $stateParams ).then(function(res){
+        $scope.coupon = res.data;
+    });
+
+}]);
+
 /*
  * New Customer Directive
  */
@@ -430,7 +451,7 @@ wp_stripe.app.directive('stripeCustomer', function() {
                 }
                 $scope.user.plan_id = $scope.planId;
 
-                Stripe.customer.new( $scope.user).then(function(res){
+                Stripe.customer.new( $scope.user ).then(function(res){
                     $scope.user = {
                         cc: {}
                     };

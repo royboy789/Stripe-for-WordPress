@@ -43,4 +43,14 @@ wp_stripe.app.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: stripe_wp_local.template_directory + '/stripe-wp-plans.edit.html',
             controller: 'PlanEdit'
         })
+        .state('coupons', {
+            url: '/coupons',
+            templateUrl: stripe_wp_local.template_directory + '/stripe-wp-coupons.list.html',
+            controller: 'CouponList'
+        })
+        .state('couponDetail', {
+            url: '/coupons/detail/:id',
+            templateUrl: stripe_wp_local.template_directory + '/stripe-wp-coupons.detail.html',
+            controller: 'CouponDetail'
+        })
 });

@@ -4,7 +4,7 @@
  * Description: A way to manage your Stripe subscriptions, customers, and products
  * Author: Roy Sivan
  * Author URI: http://www.roysivan.com
- * Version: 0.1
+ * Version: 0.2
  * Plugin URI: https://github.com/royboy789/Stripe-for-WordPress
  * License: GPL3+
  * Text Domain: wp-stripe
@@ -12,7 +12,7 @@
 
 define( 'WP_STRIPE_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WP_STRIPE_URL', plugin_dir_url( __FILE__ ) );
-define( 'WP_STRIPE_VERSION', '0.1' );
+define( 'WP_STRIPE_VERSION', '0.2' );
 
 require 'inc/wp-stripe-menu.php';
 require 'inc/wp-stripe-scripts.php';

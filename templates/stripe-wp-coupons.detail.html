@@ -1,0 +1,18 @@
+<h2>CUSTOMERS</h2>
+
+<article class="row customer-list">
+    <div class="col-sm-5">
+        <h4>Coupon:</h4>
+        {{coupon.id}}
+    </div>
+    <div class="col-sm-5">
+        <h4 ng-if="coupon.amount_off">Amount Off</h4>
+        <h4 ng-if="coupon.percent_off">Percent Off</h4>
+
+        <span ng-if="coupon.amount_off">${{coupon.amount_off}}</span>
+        <span ng-if="coupon.percent_off">{{coupon.percent_off}}%</span>
+    </div>
+    <div class="col-sm-2">
+        <a ui-sref="couponDetail({id:coupon.id})" class="btn btn-block btn-primary">View</a>
+    </div>
+</article>

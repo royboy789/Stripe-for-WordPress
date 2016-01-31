@@ -71,6 +71,10 @@
                     </div>
                 </div>
             </div>
+            <div class="form-group">
+                <label>Coupon Code</label>
+                <input ng-model="user.coupon" placeholder="Coupon Code" class="form-control" />
+            </div>
             <div class="buffer">
                 <span class="btn btn-default pull-left" ng-click="change_step(2, true)"><< Back</span>
                 <button type="submit" class="btn btn-success pull-right" ng-show="stepValidate('3')">Sign Up!</button>
