@@ -365,7 +365,9 @@ wp_stripe.app.directive('stripeCustomer', function() {
                 }
             }
             $scope.user = {
-                cc: {}
+                cc: {
+                    exp: {}
+                }
             };
 
             $scope.stepValidate = function( step ) {
@@ -450,7 +452,7 @@ wp_stripe.app.directive('stripeCustomer', function() {
                     }
 
                     if( stripe_wp_local.confirmation.type == 'page' ) {
-                        window.location = stripe_wp_local.confirmation.page;
+                        window.location = stripe_wp_local.confirmation.page + '?new_cus=' + res.data.metadata.user_id;
                     }
 
                 }, function(res){

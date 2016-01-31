@@ -58,16 +58,16 @@
         <div ng-show="group_step == 3">
             <div class="form-group">
                 <label>Credit Card Information</label>
-                <input id="cc_num" ng-model="user.cc['number']" class="form-control" placeholder="Credit Card Number" required />
+                <input id="cc_num" ng-model="user.cc.number" class="form-control" placeholder="Credit Card Number" required />
                 <div class="row">
                     <div class="col-sm-4">
-                        <input id="exp_month" ng-model="user.cc['exp']['month']" placeholder="EXP Month" class="form-control" required />
+                        <input id="exp_month" ng-model="user.cc.exp.month" placeholder="EXP Month" class="form-control" required />
                     </div>
                     <div class="col-sm-4">
-                        <input id="exp_month" ng-model="user.cc['exp']['year']" placeholder="EXP Year" class="form-control" required />
+                        <input id="exp_month" ng-model="user.cc.exp.year" placeholder="EXP Year" class="form-control" required />
                     </div>
                     <div class="col-sm-4">
-                        <input id="cc_cvc" ng-model="user.cc['cvc']" placeholder="CVC Code" class="form-control" required />
+                        <input id="cc_cvc" ng-model="user.cc.cvc" placeholder="CVC Code" class="form-control" required />
                     </div>
                 </div>
             </div>
