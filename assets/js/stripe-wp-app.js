@@ -478,6 +478,9 @@ wp_stripe.app.directive('stripeCustomer', function() {
 
                 }, function(res){
                     console.log( 'error', res );
+                    if( res.data.message && res.data.message.indexOf('Sorry, that username') > -1 ) {
+                        $scope.group_step = 2;
+                    };
                     swal({
                         'title' : 'Error',
                         'text' : 'An Error Occured: ' + res.data.message,
