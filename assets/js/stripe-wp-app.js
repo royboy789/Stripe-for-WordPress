@@ -366,7 +366,7 @@ wp_stripe.app.directive('stripeCustomer', function() {
         scope: {
             planId: '@planId'
         },
-        controller: ['$scope', 'Stripe', function($scope, Stripe){
+        controller: ['$scope', 'Stripe', 'Users', function($scope, Stripe, Users){
             $scope.group_step = 1;
             $scope.change_step = function( step, back ) {
                 back = typeof back !== 'undefined' ? back : false;
@@ -481,6 +481,11 @@ wp_stripe.app.directive('stripeCustomer', function() {
                     if( res.data.message && res.data.message.indexOf('Sorry, that username') > -1 ) {
                         $scope.group_step = 2;
                     };
+                    if( res.data.data.user ) {
+                        Users.delete({nonce: stripe_wp_local.nonce, id: res.data.data.user, force: true }, function(res){
+                            console.log('user_delete', res );
+                        });
+                    }
                     swal({
                         'title' : 'Error',
                         'text' : 'An Error Occured: ' + res.data.message,

@@ -36,23 +36,32 @@ class wp_stripe_coupons {
 			}
 			return new WP_REST_Response( $coupons, 200 );
 
-		} catch( Stripe_AuthenticationError $e ) {
+		} catch (\Stripe\Error\RateLimit $e) {
+
 			$body = $e->getJsonBody();
 			$err = $body['error'];
+			return new WP_Error($err['type'], __($err['message']), array('status' => $e->getHttpStatus()));
 
-			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
-
-		} catch( Stripe_Error $e ) {
+		} catch (\Stripe\Error\InvalidRequest $e) {
 			$body = $e->getJsonBody();
 			$err = $body['error'];
-
-			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
-
-		} catch ( \Stripe\Error\Base $e ) {
+			return new WP_Error($err['type'], __($err['message']), array('status' => $e->getHttpStatus()));
+		} catch (\Stripe\Error\Authentication $e) {
 			$body = $e->getJsonBody();
 			$err = $body['error'];
+			return new WP_Error($err['type'], __($err['message']), array('status' => $e->getHttpStatus()));
 
-			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
+		} catch (\Stripe\Error\ApiConnection $e) {
+			$body = $e->getJsonBody();
+			$err = $body['error'];
+			return new WP_Error($err['type'], __($err['message']), array('status' => $e->getHttpStatus()));
+		} catch (\Stripe\Error\Base $e) {
+			$body = $e->getJsonBody();
+			$err = $body['error'];
+			return new WP_Error($err['type'], __($err['message']), array('status' => $e->getHttpStatus()));
+		} catch (Exception $e) {
+			$body = $e->getJsonBody();
+			$err = $body['error'];
 		}
 	}
 
@@ -99,23 +108,32 @@ class wp_stripe_coupons {
 
 			return new WP_REST_Response( $coupon, 200 );
 
-		} catch( Stripe_AuthenticationError $e ) {
+		} catch (\Stripe\Error\RateLimit $e) {
+
 			$body = $e->getJsonBody();
 			$err = $body['error'];
+			return new WP_Error($err['type'], __($err['message']), array('status' => $e->getHttpStatus()));
 
-			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
-
-		} catch( Stripe_Error $e ) {
+		} catch (\Stripe\Error\InvalidRequest $e) {
 			$body = $e->getJsonBody();
 			$err = $body['error'];
-
-			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
-
-		} catch ( \Stripe\Error\Base $e ) {
+			return new WP_Error($err['type'], __($err['message']), array('status' => $e->getHttpStatus()));
+		} catch (\Stripe\Error\Authentication $e) {
 			$body = $e->getJsonBody();
 			$err = $body['error'];
+			return new WP_Error($err['type'], __($err['message']), array('status' => $e->getHttpStatus()));
 
-			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
+		} catch (\Stripe\Error\ApiConnection $e) {
+			$body = $e->getJsonBody();
+			$err = $body['error'];
+			return new WP_Error($err['type'], __($err['message']), array('status' => $e->getHttpStatus()));
+		} catch (\Stripe\Error\Base $e) {
+			$body = $e->getJsonBody();
+			$err = $body['error'];
+			return new WP_Error($err['type'], __($err['message']), array('status' => $e->getHttpStatus()));
+		} catch (Exception $e) {
+			$body = $e->getJsonBody();
+			$err = $body['error'];
 		}
 
 	}
@@ -136,23 +154,32 @@ class wp_stripe_coupons {
 
 			return new WP_REST_Response( $coupon, 200 );
 
-		} catch( Stripe_AuthenticationError $e ) {
+		} catch (\Stripe\Error\RateLimit $e) {
+
 			$body = $e->getJsonBody();
 			$err = $body['error'];
+			return new WP_Error($err['type'], __($err['message']), array('status' => $e->getHttpStatus()));
 
-			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
-
-		} catch( Stripe_Error $e ) {
+		} catch (\Stripe\Error\InvalidRequest $e) {
 			$body = $e->getJsonBody();
 			$err = $body['error'];
-
-			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
-
-		} catch ( \Stripe\Error\Base $e ) {
+			return new WP_Error($err['type'], __($err['message']), array('status' => $e->getHttpStatus()));
+		} catch (\Stripe\Error\Authentication $e) {
 			$body = $e->getJsonBody();
 			$err = $body['error'];
+			return new WP_Error($err['type'], __($err['message']), array('status' => $e->getHttpStatus()));
 
-			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
+		} catch (\Stripe\Error\ApiConnection $e) {
+			$body = $e->getJsonBody();
+			$err = $body['error'];
+			return new WP_Error($err['type'], __($err['message']), array('status' => $e->getHttpStatus()));
+		} catch (\Stripe\Error\Base $e) {
+			$body = $e->getJsonBody();
+			$err = $body['error'];
+			return new WP_Error($err['type'], __($err['message']), array('status' => $e->getHttpStatus()));
+		} catch (Exception $e) {
+			$body = $e->getJsonBody();
+			$err = $body['error'];
 		}
 
 	}
@@ -168,20 +195,32 @@ class wp_stripe_coupons {
 
 			return new WP_REST_Response( $coupon, 200 );
 
-		} catch( Stripe_AuthenticationError $e ) {
-			$body = $e->getJsonBody();
-			$err = $body['error'];
-			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
+		} catch (\Stripe\Error\RateLimit $e) {
 
-		} catch( Stripe_Error $e ) {
 			$body = $e->getJsonBody();
 			$err = $body['error'];
-			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
+			return new WP_Error($err['type'], __($err['message']), array('status' => $e->getHttpStatus()));
 
-		} catch ( \Stripe\Error\Base $e ) {
+		} catch (\Stripe\Error\InvalidRequest $e) {
 			$body = $e->getJsonBody();
 			$err = $body['error'];
-			return new WP_Error( $err['type'], __( $err['message'] ), array( 'status' => 403 ) );
+			return new WP_Error($err['type'], __($err['message']), array('status' => $e->getHttpStatus()));
+		} catch (\Stripe\Error\Authentication $e) {
+			$body = $e->getJsonBody();
+			$err = $body['error'];
+			return new WP_Error($err['type'], __($err['message']), array('status' => $e->getHttpStatus()));
+
+		} catch (\Stripe\Error\ApiConnection $e) {
+			$body = $e->getJsonBody();
+			$err = $body['error'];
+			return new WP_Error($err['type'], __($err['message']), array('status' => $e->getHttpStatus()));
+		} catch (\Stripe\Error\Base $e) {
+			$body = $e->getJsonBody();
+			$err = $body['error'];
+			return new WP_Error($err['type'], __($err['message']), array('status' => $e->getHttpStatus()));
+		} catch (Exception $e) {
+			$body = $e->getJsonBody();
+			$err = $body['error'];
 		}
 	}
 }
