@@ -368,6 +368,7 @@ wp_stripe.app.directive('stripeCustomer', function() {
         },
         controller: ['$scope', 'Stripe', 'Users', function($scope, Stripe, Users){
             $scope.group_step = 1;
+            $scope.coupon_invalid = false;
             $scope.change_step = function( step, back ) {
                 back = typeof back !== 'undefined' ? back : false;
 
@@ -451,47 +452,103 @@ wp_stripe.app.directive('stripeCustomer', function() {
                 }
                 $scope.user.plan_id = $scope.planId;
 
-                Stripe.customer.new( $scope.user ).then(function(res){
-                    $scope.user = {
-                        cc: {}
-                    };
+                if( $scope.user.coupon ) {
+                    Stripe.coupons.get_coupons({id: $scope.user.coupon}).then(function(res){
+                        if( !res.data.id ) {
+                            $scope.coupon_invalid = true;
+                        } else {
+                            $scope.coupon_invalid = false;
+                            Stripe.customer.new( $scope.user ).then(function(res){
+                                $scope.user = {
+                                    cc: {}
+                                };
 
-                    if( !stripe_wp_local.confirmation.type ) {
-                        swal({
-                            'title' : 'Success!',
-                            'text' : 'We have successfully added you!',
-                            'type' : 'success'
-                        });
-                    }
+                                if( !stripe_wp_local.confirmation.type ) {
+                                    swal({
+                                        'title' : 'Success!',
+                                        'text' : 'We have successfully added you!',
+                                        'type' : 'success'
+                                    });
+                                }
 
-                    if( stripe_wp_local.confirmation.type == 'message' ) {
-                        swal({
-                            'title' : 'Success!',
-                            'text' : stripe_wp_local.confirmation.message,
-                            'type' : 'success'
-                        });
-                    }
+                                if( stripe_wp_local.confirmation.type == 'message' ) {
+                                    swal({
+                                        'title' : 'Success!',
+                                        'text' : stripe_wp_local.confirmation.message,
+                                        'type' : 'success'
+                                    });
+                                }
 
-                    if( stripe_wp_local.confirmation.type == 'page' ) {
-                        window.location = stripe_wp_local.confirmation.page + '?new_cus=' + res.data.metadata.user_id;
-                    }
+                                if( stripe_wp_local.confirmation.type == 'page' ) {
+                                    window.location = stripe_wp_local.confirmation.page + '?new_cus=' + res.data.metadata.user_id;
+                                }
 
-                }, function(res){
-                    console.log( 'error', res );
-                    if( res.data.message && res.data.message.indexOf('Sorry, that username') > -1 ) {
-                        $scope.group_step = 2;
-                    };
-                    if( res.data.data.user ) {
-                        Users.delete({nonce: stripe_wp_local.nonce, id: res.data.data.user, force: true }, function(res){
-                            console.log('user_delete', res );
-                        });
-                    }
-                    swal({
-                        'title' : 'Error',
-                        'text' : 'An Error Occured: ' + res.data.message,
-                        'type' : 'error'
+                            }, function(res){
+                                console.log( 'error', res );
+                                if( res.data.message && res.data.message.indexOf('Sorry, that username') > -1 ) {
+                                    $scope.group_step = 2;
+                                };
+                                if( res.data.data.user ) {
+                                    Users.delete({nonce: stripe_wp_local.nonce, id: res.data.data.user, force: true }, function(res){
+                                        console.log('user_delete', res );
+                                    });
+                                }
+                                swal({
+                                    'title' : 'Error',
+                                    'text' : 'An Error Occured: ' + res.data.message,
+                                    'type' : 'error'
+                                });
+                            });
+                        }
+                    }, function( error ) {
+                        console.log( error );
+                        $scope.coupon_invalid = true;
+                        return false;
                     });
-                });
+                } else {
+                    Stripe.customer.new( $scope.user ).then(function(res){
+                        $scope.user = {
+                            cc: {}
+                        };
+
+                        if( !stripe_wp_local.confirmation.type ) {
+                            swal({
+                                'title' : 'Success!',
+                                'text' : 'We have successfully added you!',
+                                'type' : 'success'
+                            });
+                        }
+
+                        if( stripe_wp_local.confirmation.type == 'message' ) {
+                            swal({
+                                'title' : 'Success!',
+                                'text' : stripe_wp_local.confirmation.message,
+                                'type' : 'success'
+                            });
+                        }
+
+                        if( stripe_wp_local.confirmation.type == 'page' ) {
+                            window.location = stripe_wp_local.confirmation.page + '?new_cus=' + res.data.metadata.user_id;
+                        }
+
+                    }, function(res){
+                        console.log( 'error', res );
+                        if( res.data.message && res.data.message.indexOf('Sorry, that username') > -1 ) {
+                            $scope.group_step = 2;
+                        };
+                        if( res.data.data.user ) {
+                            Users.delete({nonce: stripe_wp_local.nonce, id: res.data.data.user, force: true }, function(res){
+                                console.log('user_delete', res );
+                            });
+                        }
+                        swal({
+                            'title' : 'Error',
+                            'text' : 'An Error Occured: ' + res.data.message,
+                            'type' : 'error'
+                        });
+                    });
+                }
+
             }
         }]
     }

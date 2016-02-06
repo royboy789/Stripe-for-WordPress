@@ -138,6 +138,8 @@ wp_stripe.app.factory( 'Stripe', function( $resource, $q, $http ){
                 var response = $q.defer();
                 $http.get(url).then(function(res) {
                     response.resolve( res );
+                },function( res ) {
+                    response.reject( res );
                 });
                 return response.promise;
             },

@@ -71,11 +71,12 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group clearfix">
                 <label>Coupon Code</label>
                 <input ng-model="user.coupon" placeholder="Coupon Code" class="form-control" />
+                <p ng-show="coupon_invalid" style="color:red;">coupon not recognized</p>
             </div>
-            <div class="buffer">
+            <div class="buffer clearfix">
                 <span class="btn btn-default pull-left" ng-click="change_step(2, true)"><< Back</span>
                 <button type="submit" class="btn btn-success pull-right" ng-show="stepValidate('3')">Sign Up!</button>
             </div>
