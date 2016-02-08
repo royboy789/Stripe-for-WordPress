@@ -1,10 +1,10 @@
 <?php
 /**
- * Plugin Name: Stripe For WordPress
+ * Plugin Name: Stripe for WordPress
  * Description: A way to manage your Stripe subscriptions, customers, and products
  * Author: Roy Sivan
  * Author URI: http://www.roysivan.com
- * Version: 1
+ * Version: 1.1.0
  * Plugin URI: https://github.com/royboy789/Stripe-for-WordPress
  * License: GPL3+
  * Text Domain: wp-stripe
@@ -12,7 +12,8 @@
 
 define( 'WP_STRIPE_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WP_STRIPE_URL', plugin_dir_url( __FILE__ ) );
-define( 'WP_STRIPE_VERSION', '1' );
+define( 'WP_STRIPE_VERSION', '1.1.0' );
+define( 'WP_STRIPE_FILE', __FILE__ );
 
 require_once 'inc/wp-stripe-menu.php';
 require_once 'inc/wp-stripe-scripts.php';

@@ -17,7 +17,7 @@ class wp_stripe_menu {
 		'<div class="container app-container" ng-app="stripe-wp">
                 <div class="row">
                     <div class="col-sm-12">
-                        <h1>Stripe for WordPress</h1>
+                        <h1>' . __('Stripe for WordPress', 'wp-stripe' ) . '</h1>
                         <nav class="navbar navbar-default">
                             <div class="collapse navbar-collapse">
                                 <ul class="nav navbar-nav">
