@@ -23,7 +23,7 @@ class wp_stripe_routes {
 		register_rest_route( 'stripe-wp', '/settings', array(
 			'methods' => 'GET',
 			'callback' => array( $settings_api, 'get_settings' ),
-			'permission_callback' => array( $this, 'verify_nonce' )
+			'permission_callback' => array( $this, 'verify_admin' )
 		));
 
 		register_rest_route( 'stripe-wp', '/settings', array(
@@ -39,12 +39,12 @@ class wp_stripe_routes {
 			array(
 				'methods' => 'GET',
 				'callback' => array( $customers_api, 'get_customers' ),
-				'permission_callback' => array( $this, 'verify_nonce' )
+				'permission_callback' => array( $this, 'verify_admin' )
 			),
 			array(
 				'methods' => 'POST',
 				'callback' => array( $customers_api, 'new_customer' ),
-				'permission_callback' => array( $this, 'verify_nonce' )
+				'permission_callback' => array( $this, 'verify_admin' )
 			)
 		));
 
@@ -52,17 +52,17 @@ class wp_stripe_routes {
 			array(
 				'methods' => 'POST',
 				'callback' => array( $customers_api, 'save_customer' ),
-				'permission_callback' => array( $this, 'verify_nonce' )
+				'permission_callback' => array( $this, 'verify_admin' )
 			),
 			array(
 				'methods' => 'GET',
 				'callback' => array( $customers_api, 'get_customers' ),
-				'permission_callback' => array( $this, 'verify_nonce' )
+				'permission_callback' => array( $this, 'verify_admin' )
 			),
 			array(
 				'methods' => 'DELETE',
 				'callback' => array( $customers_api, 'delete_customer' ),
-				'permission_callback' => array( $this, 'verify_nonce' )
+				'permission_callback' => array( $this, 'verify_admin' )
 			),
 		));
 
@@ -73,7 +73,7 @@ class wp_stripe_routes {
 			array(
 				'methods' => 'GET',
 				'callback' => array( $plans_api, 'get_plans' ),
-				'permission_callback' => array( $this, 'verify_nonce' )
+				'permission_callback' => array( $this, 'verify_admin' )
 			)
 		));
 
@@ -81,17 +81,17 @@ class wp_stripe_routes {
 			array(
 				'methods' => 'POST',
 				'callback' => array( $plans_api, 'save_plan' ),
-				'permission_callback' => array( $this, 'verify_nonce' )
+				'permission_callback' => array( $this, 'verify_admin' )
 			),
 			array(
 				'methods' => 'GET',
 				'callback' => array( $plans_api, 'get_plans' ),
-				'permission_callback' => array( $this, 'verify_nonce' )
+				'permission_callback' => array( $this, 'verify_admin' )
 			),
 			array(
 				'methods' => 'DELETE',
 				'callback' => array( $plans_api, 'delete_plan' ),
-				'permission_callback' => array( $this, 'verify_nonce' )
+				'permission_callback' => array( $this, 'verify_admin' )
 			)
 		));
 
@@ -103,12 +103,12 @@ class wp_stripe_routes {
 			array(
 				'methods' => 'GET',
 				'callback' => array( $coupons_api, 'get_coupons' ),
-				'permission_callback' => array( $this, 'verify_nonce' )
+				'permission_callback' => array( $this, 'verify_admin' )
 			),
 			array(
 				'methods' => 'POST',
 				'callback' => array( $coupons_api, 'new_coupon' ),
-				'permission_callback' => array( $this, 'verify_nonce' )
+				'permission_callback' => array( $this, 'verify_admin' )
 			)
 		));
 
@@ -116,24 +116,31 @@ class wp_stripe_routes {
 			array(
 				'methods' => 'POST',
 				'callback' => array( $coupons_api, 'save_coupon' ),
-				'permission_callback' => array( $this, 'verify_nonce' )
+				'permission_callback' => array( $this, 'verify_admin' )
 			),
 			array(
 				'methods' => 'GET',
 				'callback' => array( $coupons_api, 'get_coupons' ),
-				'permission_callback' => array( $this, 'verify_nonce' )
+				'permission_callback' => array( $this, 'verify_admin' )
 			),
 			array(
 				'methods' => 'DELETE',
 				'callback' => array( $coupons_api, 'delete_coupon' ),
-				'permission_callback' => array( $this, 'verify_nonce' )
+				'permission_callback' => array( $this, 'verify_admin' )
 			),
 		));
 
 	}
 
-	function verify_nonce( WP_REST_Request $request ) {
+	function verify_admin( WP_REST_Request $request ) {
 		$data = $request->get_params();
+		if( !$this->verify_nonce( $data ) ) {
+			return false;
+		}
+		return current_user_can( 'edit_theme_options' );
+	}
+
+	function verify_nonce( $data ) {
 		if( !$data['_wpnonce'] ) {
 			return false;
 		} else {
