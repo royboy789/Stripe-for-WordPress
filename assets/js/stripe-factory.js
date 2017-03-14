@@ -5,7 +5,7 @@ wp_stripe.app.factory( 'Stripe', function( $resource, $q, $http ){
     return {
         get_settings: function( data ){
             var response = $q.defer();
-            var config = {}
+            var config = {};
             if( data && data.more_settings ) {
                 config.params = {
                     'more_settings[]': [],

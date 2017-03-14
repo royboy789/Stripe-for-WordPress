@@ -68,9 +68,7 @@ wp_stripe.app.controller( 'Settings', ['$scope', '$rootScope', '$timeout', '$htt
             confirmation: {}
         };
 
-        $http.get( stripe_wp_local.api_url + 'wp/v2/pages?_wpnonce=' + stripe_wp_local.nonce).then(function(res) {
-            $scope.pages = res.data;
-        });
+        console.log( res.data );
 
         if( res.data.mode ) {
             $scope.settings.mode = res.data.mode;
@@ -87,6 +85,10 @@ wp_stripe.app.controller( 'Settings', ['$scope', '$rootScope', '$timeout', '$htt
         if( !$scope.settings.confirmation.message ) {
             $scope.settings.confirmation.message = '';
         }
+
+        $http.get( stripe_wp_local.api_url + 'wp/v2/pages?_wpnonce=' + stripe_wp_local.nonce).then(function(res) {
+            $scope.pages = res.data;
+        });
 
     }, function(res){
         $scope.settings = {
