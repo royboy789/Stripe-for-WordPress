@@ -3,18 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "dependencies": {
-    "angular": "^1.4.9",
-    "bootstrap-sass": "^3.3.6",
-    "angular-ui-router": "^0.2.16",
-    "gulp-sass": "^2.1.1",
-    "gulp-sourcemaps": "^1.6.0",
-    "gulp": "^3.9.0",
-    "gulp-watch": "^4.3.5"
-  },
   "devDependencies": {
-    "angular": "^1.6.2",
-    "angular-resource": "^1.6.2",
+    "angular": "^1.6.3",
+    "angular-resource": "^1.6.3",
     "angular-ui-router": "^0.4.2",
     "bootstrap-sass": "^3.3.6",
     "gulp": "^3.9.0",

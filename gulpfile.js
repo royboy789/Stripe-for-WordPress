@@ -60,12 +60,12 @@ gulp.task( 'jsFED', function() {
     gulp.src(jsFileListFED)
         .pipe( concat('stripe-wp-fed-scripts.js') )
         .pipe( gulp.dest( './build/front-end/js' ) );
-})
+});
 
 gulp.task( 'watch', function(){
     gulp.watch('./assets/scss/*.scss', ['sass', 'sassFED'] );
     gulp.watch(jsFileList, ['js'] );
     gulp.watch(jsFileListFED, ['jsFED'] );
-})
+});
 
 gulp.task( 'default', ['sass', 'sassFED', 'js', 'jsFED', 'watch'] );
