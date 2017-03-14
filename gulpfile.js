@@ -5,7 +5,7 @@ var gulp = require('gulp'),
 
 var jsFileList = [
     'node_modules/angular/angular.min.js',
-    'node_modules/angular-ui-router/build/angular-ui-router.min.js',
+    'node_modules/angular-ui-router/release/angular-ui-router.js',
     'node_modules/angular-resource/angular-resource.min.js',
     'node_modules/sweetalert/dist/sweetalert.min.js',
     'assets/js/stripe-wp-app.js',
@@ -17,7 +17,7 @@ var jsFileList = [
 
 var jsFileListFED = [
     'node_modules/angular/angular.min.js',
-    'node_modules/angular-ui-router/build/angular-ui-router.min.js',
+    'node_modules/angular-ui-router/release/angular-ui-router.js',
     'node_modules/angular-resource/angular-resource.min.js',
     'node_modules/sweetalert/dist/sweetalert.min.js',
     'assets/js/stripe-wp-app.js',

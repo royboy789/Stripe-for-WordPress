@@ -13,9 +13,9 @@
     "gulp-watch": "^4.3.5"
   },
   "devDependencies": {
-    "angular": "^1.4.8",
-    "angular-resource": "^1.4.8",
-    "angular-ui-router": "^0.2.15",
+    "angular": "^1.6.2",
+    "angular-resource": "^1.6.2",
+    "angular-ui-router": "^0.4.2",
     "bootstrap-sass": "^3.3.6",
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
