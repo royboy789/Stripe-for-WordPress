@@ -19,7 +19,7 @@ I have created a few endpoins if you want to extend. All under the `stripe-wp` n
 + Clone Repo
 + Run `npm install`
 + Run `gulp`
-+ Move `build`, `inc`, `templates`, and `stripe-for-wp.php` into a new directory within your `wp-content/plugins`
++ Move `build`, `inc`, `templates`, `edd` and `stripe-for-wp.php` into a new directory within your `wp-content/plugins`
 + Login to your dashboard and activate the `Stripe for WordPress` plugin
 
 ##TO-DO
