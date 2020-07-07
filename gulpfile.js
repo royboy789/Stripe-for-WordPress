@@ -26,7 +26,7 @@ var jsFileListFED = [
     'assets/js/user-factory.js',
 ]
 
-gulp.task( 'sass', function() {
+gulp.task( 'sass', async function() {
     gulp.src('./assets/scss/wp-stripe-styles.scss')
         .pipe(sourcemaps.init())
         .pipe(sass({
@@ -38,7 +38,7 @@ gulp.task( 'sass', function() {
         .pipe(gulp.dest('./build/css'));
 });
 
-gulp.task( 'sassFED', function() {
+gulp.task( 'sassFED', async function() {
     gulp.src('./assets/scss/wp-stripe-fed-styles.scss')
         .pipe(sourcemaps.init())
         .pipe(sass({
@@ -50,22 +50,22 @@ gulp.task( 'sassFED', function() {
         .pipe(gulp.dest('./build/front-end/css'));
 });
 
-gulp.task( 'js', function(){
+gulp.task( 'js', async function(){
     gulp.src(jsFileList)
         .pipe(concat('wp-stripe-scripts.js'))
         .pipe(gulp.dest('build/js/'));
 });
 
-gulp.task( 'jsFED', function() {
+gulp.task( 'jsFED', async function() {
     gulp.src(jsFileListFED)
         .pipe( concat('stripe-wp-fed-scripts.js') )
         .pipe( gulp.dest( './build/front-end/js' ) );
 });
 
-gulp.task( 'watch', function(){
-    gulp.watch('./assets/scss/*.scss', ['sass', 'sassFED'] );
-    gulp.watch(jsFileList, ['js'] );
-    gulp.watch(jsFileListFED, ['jsFED'] );
+gulp.task( 'watch', async function(){
+    gulp.watch('./assets/scss/*.scss', gulp.series(['sass', 'sassFED']) );
+    gulp.watch(jsFileList, gulp.series(['js']) );
+    gulp.watch(jsFileListFED, gulp.series(['jsFED']) );
 });
 
-gulp.task( 'default', ['sass', 'sassFED', 'js', 'jsFED', 'watch'] );
+gulp.task('default', gulp.series(['sass', 'sassFED', 'js', 'jsFED', 'watch']));
