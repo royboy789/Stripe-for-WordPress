@@ -8,9 +8,9 @@
     "angular-resource": "^1.6.3",
     "angular-ui-router": "^0.4.2",
     "bootstrap-sass": "^3.3.6",
-    "gulp": "^3.9.0",
+    "gulp": "4.0.2",
     "gulp-concat": "^2.6.0",
-    "gulp-sass": "^2.1.1",
+    "gulp-sass": "4.1.0",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-watch": "^4.3.5",
     "sweetalert": "^1.1.3"
@@ -27,5 +27,8 @@
   "bugs": {
     "url": "https://github.com/royboy789/Stripe-for-WordPress/issues"
   },
-  "homepage": "https://github.com/royboy789/Stripe-for-WordPress#readme"
+  "homepage": "https://github.com/royboy789/Stripe-for-WordPress#readme",
+  "dependencies": {
+    "natives": "^1.1.6"
+  }
 }
